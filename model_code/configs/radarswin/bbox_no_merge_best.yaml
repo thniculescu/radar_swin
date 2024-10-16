@@ -1,6 +1,6 @@
 DATA:
   DATASET: 'nuscenes'
-  DATA_PATH: '/imec/other/dl4ms/nicule52/work/radarswin/preproc_datasets/nusc_preproc_data_viz1_sw6'
+  DATA_PATH: '../preproc_datasets/nusc_preproc_data_viz1_sw6'
   INPUT_SIZE: (6, 360)
   BATCH_SIZE: 128
   VAL_RATIO: 0.2
@@ -11,7 +11,7 @@ MODEL:
   DROP_PATH_RATE: 0.2
   NUM_CLASSES: 1
 
-  PRETRAINED: '/imec/other/dl4ms/nicule52/work/radarswin/radarswin_checkpoints/g_bbox_no_merge_best/ckpt_epoch_199.pth'
+  PRETRAINED: '../checkpoints/g_bbox_no_merge_best/ckpt_epoch_199.pth'
   RESUME: ''
   RADARSWIN:
     PATCH_SIZE: [1, 1]

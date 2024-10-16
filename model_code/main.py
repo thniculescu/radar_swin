@@ -93,7 +93,9 @@ PYTORCH_MAJOR_VERSION = int(torch.__version__.split('.')[0])
 
 def parse_option():
     # CONFIG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radar-swin/configs/radarswin/bbox_vr_6sw_biglast.yaml'
-    CONFIG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radar-swin/configs/radarswin/bbox_no_merge_best.yaml'
+    print("CWDDD:", os.getcwd())
+
+    CONFIG_PATH = './configs/radarswin/bbox_no_merge_best.yaml'
 
     parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
     parser.add_argument('--cfg', type=str, required=False, metavar="FILE", help='path to config file', default=CONFIG_PATH)

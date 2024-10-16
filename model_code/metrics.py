@@ -161,8 +161,8 @@ def accumulate(gt_boxes: List,
     conf = np.interp(rec_interp, rec, conf, right=0)
     rec = rec_interp
 
-    # import matplotlib.pyplot as plt
-    # # plt.plot(rec[10:], prec[10:])
+    import matplotlib.pyplot as plt
+    # plt.plot(rec[10:], prec[10:])
     # plt.plot(rec, prec)
     # plt.xlabel('Recall')
     # plt.ylabel('Precision')
