@@ -77,6 +77,7 @@ def do_plots(config, data_loader_val, model):
 
     # take a sample from the validation set
     for i, (samples, target) in enumerate(data_loader_val):
+        print("validation samples shape: ", samples.shape)
 
         with torch.amp.autocast('cuda', enabled=config.AMP_ENABLE):
             outputs = model(samples)
@@ -84,7 +85,8 @@ def do_plots(config, data_loader_val, model):
         # pred      : B, 360, 8     : hmap, range, orientation [sin, cos], size [w l], velocity [vr vt]
         # target    : B, 360, 8 + 1 : hmap, range, orientation [sin, cos], size [w l], velocity [vr vt], mask
 
-        for j in np.random.randint(50, samples.shape[0] - 1, 8):
+        # for j in [2]:
+        for j in np.random.randint(50, 100, 4):
             sweeps = samples[j]
             sweeps = sweeps.cpu().numpy().transpose(1, 2, 0)
 

@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# LOG_PATH = '/imec/other/dl4ms/nicule52/radarswin_tiny/g_bbox_no_merge_best/log_rank0.txt'
-LOG_PATH = '/imec/other/dl4ms/nicule52/radarswin_tiny/default/log_rank0.txt'
+# LOG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radarswin_checkpoints/g_bbox_no_merge_best/log_rank0.txt'
+LOG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radarswin_checkpoints/g_big400/log_rank0.txt'
 
 with open(LOG_PATH, 'r') as f:
     lines = f.readlines()
@@ -30,5 +30,25 @@ with open(LOG_PATH, 'r') as f:
     plt.legend()
     plt.ylim(1.5, 3)
     plt.grid()
+
+with open('/imec/other/dl4ms/nicule52/work/radarswin/radar-swin/radarswin_tiny/default/log_rank0.txt', 'r') as f:
+    lines = f.readlines()
+
+    average_ap = []
+    for line in lines:
+        if 'AP' in line:
+            average_ap.append(float((line.split('AP ')[1].split()[1])[1:-1]))
+
+    x_axis = np.arange(len(average_ap)) / 6 * 5
+    average_ap = np.convolve(average_ap, np.ones(20)/20, mode='full')
+    average_ap = average_ap[:-19]
+
+    plt.figure()
+    plt.plot(x_axis, average_ap)
+    plt.xlabel('Epoch')
+    plt.ylabel('AP (average precision)')
+    plt.grid()
+    plt.ylim(0, 0.02)
+    plt.show()
 
 print("gogu")

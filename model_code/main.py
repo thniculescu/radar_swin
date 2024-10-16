@@ -28,8 +28,7 @@ from data import build_loader
 from lr_scheduler import build_scheduler
 from optimizer import build_optimizer
 from logger import create_logger
-from utils import load_checkpoint, load_pretrained, save_checkpoint, NativeScalerWithGradNormCount, auto_resume_helper, \
-    reduce_tensor
+from utils import load_checkpoint, load_pretrained, save_checkpoint, NativeScalerWithGradNormCount, auto_resume_helper, reduce_tensor
 from losses import RadarSwinLoss
 import torchinfo
 from metrics import calc_sweep_metrics
@@ -93,8 +92,8 @@ PYTORCH_MAJOR_VERSION = int(torch.__version__.split('.')[0])
 #     return args, config
 
 def parse_option():
-    CONFIG_PATH = '/imec/other/dl4ms/nicule52/radar-swin/configs/radarswin/bbox_vr_6sw_biglast.yaml'
-    # CONFIG_PATH = '/imec/other/dl4ms/nicule52/radar-swin/configs/radarswin/bbox_no_merge_best.yaml'
+    # CONFIG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radar-swin/configs/radarswin/bbox_vr_6sw_biglast.yaml'
+    CONFIG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radar-swin/configs/radarswin/bbox_no_merge_best.yaml'
 
     parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
     parser.add_argument('--cfg', type=str, required=False, metavar="FILE", help='path to config file', default=CONFIG_PATH)
@@ -170,9 +169,15 @@ def main(config, logger):
             return
 
     if config.MODEL.PRETRAINED and (not config.MODEL.RESUME):
+        # for chk_nr in range(5, 475, 5):
+        #     config.defrost()
+        #     config.MODEL.PRETRAINED = f'/imec/other/dl4ms/nicule52/work/radarswin/radarswin_checkpoints/g_big400/ckpt_epoch_{chk_nr}.pth'
+        #     config.freeze()
+
         load_pretrained(config, model_without_ddp, logger)
         acc1, acc5, loss = validate(config, data_loader_val, model, logger)
         logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {acc1:.1f}%")
+
         if config.EVAL_MODE:
             do_plots(config, data_loader_val, model)
             return
@@ -284,7 +289,7 @@ def validate(config, data_loader, model, logger):
 
         # measure accuracy and record loss
         loss = criterion(output, target)
-        # detA2, AP = calc_sweep_metrics(output, target)
+        AP = calc_sweep_metrics(output, target)
 
         # # detA2 = reduce_tensor(detA2)
         # AP = reduce_tensor(AP)
@@ -292,7 +297,7 @@ def validate(config, data_loader, model, logger):
 
         loss_meter.update(loss.item(), target.size(0))
         # # detA2_meter.update(detA2.item(), target.size(0))
-        # # AP_meter.update(AP.item(), target.size(0))
+        AP_meter.update(AP.item(), target.size(0))
 
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -305,11 +310,11 @@ def validate(config, data_loader, model, logger):
                 f'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                 f'Loss {loss_meter.val:.4f} ({loss_meter.avg:.4f})\t'
                 # f'detA@2m {detA2_meter.val:.3f} ({detA2_meter.avg:.3f})\t'
-                # # f'AP {AP_meter.val:.3f} ({AP_meter.avg:.3f})\t'
+                f'AP {AP_meter.val:.3f} ({AP_meter.avg:.3f})\t'
                 f'Mem {memory_used:.0f}MB')
     # logger.info(f' * Acc@1 {detA2_meter.avg:.3f} Acc@5 {AP_meter.avg:.3f}')
     # return detA2_meter.avg, AP_meter.avg, loss_meter.avg
-    return 44, 33, loss_meter.avg
+    return 44, AP_meter.avg, loss_meter.avg
 
 
 @torch.no_grad()

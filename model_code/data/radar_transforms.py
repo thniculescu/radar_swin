@@ -56,6 +56,6 @@ class target_transform(object):
 
         # print(new_anns[mask[:, 0] == 1])
 
-        target = torch.hstack([hmap, new_anns, mask]) # 360 x 8 : hmap, mask, range, orientation [sin, cos], size [w l], velocity [vr vt]
+        target = torch.hstack([hmap, new_anns, mask]) # 360 x 8 + 1 : hmap, range, orientation [sin, cos], size [w l], velocity [vr vt], mask
 
         return target

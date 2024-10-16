@@ -151,6 +151,10 @@ def build_dataset(is_train, config):
         # Split scene IDs
         train_scenes, val_scenes = train_test_split(all_scene_ids, test_size=config.DATA.VAL_RATIO, random_state=42)
         
+        print(f"NR train:{len(train_scenes)}, NR val:{len(val_scenes)}")
+        print(f"train scenes: {train_scenes}")
+        print(f"val scenes: {val_scenes}")
+        
         if is_train:
             dataset = RadarSwinDataSet(root, 
                                        transform=transform, 
