@@ -21,27 +21,27 @@ from . import radar_transforms
 # from .cached_image_folder import CachedImageFolder
 from .samplers import SubsetRandomSampler
 
-try:
-    from torchvision.transforms import InterpolationMode
+# try:
+#     from torchvision.transforms import InterpolationMode
 
 
-    def _pil_interp(method):
-        if method == 'bicubic':
-            return InterpolationMode.BICUBIC
-        elif method == 'lanczos':
-            return InterpolationMode.LANCZOS
-        elif method == 'hamming':
-            return InterpolationMode.HAMMING
-        else:
-            # default bilinear, do we want to allow nearest?
-            return InterpolationMode.BILINEAR
+#     def _pil_interp(method):
+#         if method == 'bicubic':
+#             return InterpolationMode.BICUBIC
+#         elif method == 'lanczos':
+#             return InterpolationMode.LANCZOS
+#         elif method == 'hamming':
+#             return InterpolationMode.HAMMING
+#         else:
+#             # default bilinear, do we want to allow nearest?
+#             return InterpolationMode.BILINEAR
 
 
-    import timm.data.transforms as timm_transforms
+#     import timm.data.transforms as timm_transforms
 
-    timm_transforms._pil_interp = _pil_interp
-except:
-    from timm.data.transforms import _pil_interp
+#     timm_transforms._pil_interp = _pil_interp
+# except:
+#     from timm.data.transforms import _pil_interp
 
 
 def build_loader(config):
@@ -106,6 +106,92 @@ class RadarSwinDataSet(Dataset):
     def __init__(self, dataset_root, transform=None, target_transform=None, scene_ids=None):
         self.dataset_root = dataset_root
 
+        self.data = np.load(self.dataset_root, allow_pickle=True).item()
+
+        if scene_ids is None:
+            self.scene_ids = list(self.data.keys())
+            self.scene_ids.sort()
+        else:
+            self.scene_ids = [f for f in self.data.keys() 
+                                 if f in scene_ids]
+            self.scene_ids.sort()
+
+        self.sweeps = [(scene_id, sweep_nr) for scene_id in self.scene_ids for sweep_nr in range(len(self.data[scene_id]['radar']))]
+
+        print("sweeps", self.sweeps[:50])
+
+        #shuffle sweeps
+        # np.random.shuffle(self.sweeps)
+
+        # print("(scene_id, sweep_id)", self.sweeps)
+
+        self.transform = transform
+        self.target_transform = target_transform
+
+
+    def __getitem__(self, index):
+        img = torch.from_numpy(self.data[self.sweeps[index][0]]['radar'][self.sweeps[index][1]])
+        anns = torch.from_numpy(self.data[self.sweeps[index][0]]['anns'][self.sweeps[index][1]])
+        hmap = torch.from_numpy(self.data[self.sweeps[index][0]]['heatmap'][self.sweeps[index][1]])
+
+        if self.transform is not None:
+            img = self.transform(img)
+        if self.target_transform is not None:
+            target = self.target_transform((anns, hmap))
+
+        return img, target
+
+    def __len__(self):
+        return len(self.sweeps)
+     
+
+def build_dataset(is_train, config):
+    transform, target_transform = build_transform(config)
+    if config.DATA.DATASET == 'nuscenes':
+        root = os.path.join(config.DATA.DATA_PATH)
+        
+        # Get all scene IDs
+
+        all_scene_ids = list(np.load(root, allow_pickle=True).item().keys())
+        # print("10 all_scene_ids", all_scene_ids[:50])
+        # Split scene IDs
+        train_scenes, val_scenes = train_test_split(all_scene_ids, test_size=config.DATA.VAL_RATIO, random_state=42)
+        
+        print(f"NR train:{len(train_scenes)}, NR val:{len(val_scenes)}")
+        # print(f"train scenes: {train_scenes}")
+        # print(f"val scenes: {val_scenes}")
+        
+        if is_train:
+            dataset = RadarSwinDataSet(root, 
+                                       transform=transform, 
+                                       target_transform=target_transform,
+                                       scene_ids=train_scenes)
+        else:
+            dataset = RadarSwinDataSet(root, 
+                                       transform=transform, 
+                                       target_transform=target_transform,
+                                       scene_ids=val_scenes)
+    else:
+        raise NotImplementedError("We only support NuScenes Now.")
+
+    return dataset
+
+
+def build_transform(config):
+    transform = radar_transforms.input_transform(config)
+    target_transform = radar_transforms.target_transform(config)
+    return transform, target_transform
+
+
+###########################################################
+####################### OLD DATASET #######################
+###########################################################
+
+
+class RadarSwinDataSetOld(Dataset):
+    def __init__(self, dataset_root, transform=None, target_transform=None, scene_ids=None):
+        self.dataset_root = dataset_root
+
         if scene_ids is None:
             self.sweeps_names = os.listdir(os.path.join(self.dataset_root, "radar"))
             self.sweeps_names.sort()
@@ -139,7 +225,7 @@ class RadarSwinDataSet(Dataset):
         return len(self.sweeps_names)
      
 
-def build_dataset(is_train, config):
+def build_dataset_old(is_train, config):
     transform, target_transform = build_transform(config)
     if config.DATA.DATASET == 'nuscenes':
         root = os.path.join(config.DATA.DATA_PATH)
@@ -152,16 +238,16 @@ def build_dataset(is_train, config):
         train_scenes, val_scenes = train_test_split(all_scene_ids, test_size=config.DATA.VAL_RATIO, random_state=42)
         
         print(f"NR train:{len(train_scenes)}, NR val:{len(val_scenes)}")
-        print(f"train scenes: {train_scenes}")
-        print(f"val scenes: {val_scenes}")
+        # print(f"train scenes: {train_scenes}")
+        # print(f"val scenes: {val_scenes}")
         
         if is_train:
-            dataset = RadarSwinDataSet(root, 
+            dataset = RadarSwinDataSetOld(root, 
                                        transform=transform, 
                                        target_transform=target_transform,
                                        scene_ids=train_scenes)
         else:
-            dataset = RadarSwinDataSet(root, 
+            dataset = RadarSwinDataSetOld(root, 
                                        transform=transform, 
                                        target_transform=target_transform,
                                        scene_ids=val_scenes)
@@ -171,9 +257,9 @@ def build_dataset(is_train, config):
     return dataset
 
 
-def build_transform(config):
-    transform = radar_transforms.input_transform(config)
-    target_transform = radar_transforms.target_transform(config)
+# def build_transform(config):
+#     transform = radar_transforms.input_transform(config)
+#     target_transform = radar_transforms.target_transform(config)
         # transform = create_transform(
         #     input_size=config.DATA.IMG_SIZE,
         #     is_training=True,
@@ -188,7 +274,7 @@ def build_transform(config):
         #     # replace RandomResizedCropAndInterpolation with
         #     # RandomCrop
         #     transform.transforms[0] = transforms.RandomCrop(config.DATA.IMG_SIZE, padding=4)
-    return transform, target_transform
+    # return transform, target_transform
 
     # t = []
     # if resize_im:

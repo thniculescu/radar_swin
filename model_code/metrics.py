@@ -1,5 +1,6 @@
 from typing import List, Callable
 import numpy as np
+from copy import deepcopy
 
 def extract_gt_anns(target):
     #for each position where target[:, 8] == 1, extract the corresponding target[:, 1:8]
@@ -86,10 +87,10 @@ def accumulate(gt_boxes: List,
     # Match and accumulate match data.
     # ---------------------------------------------
 
-    taken = set()  # Initially no gt bounding box is matched.
+    # taken = set()  # Initially no gt bounding box is matched.
     for x in range(pred_boxes_list.shape[0]):
         pred_box = pred_boxes_list[x]
-        min_dist = np.inf
+        min_dist = 200  # Initialize to a large number.
         match_gt_idx = None
 
         for gt_idx, gt_box in enumerate(gt_boxes[int(pred_box[2])]):
@@ -114,7 +115,6 @@ def accumulate(gt_boxes: List,
             #  Update tp, fp and confs.
             tp.append(1)
             fp.append(0)
-            conf.append(pred_box[3])
 
             # Since it is a match, update match data also.
             # gt_box_match = gt_boxes[pred_box.sample_token][match_gt_idx]
@@ -134,7 +134,10 @@ def accumulate(gt_boxes: List,
             # No match. Mark this as a false positive.
             tp.append(0)
             fp.append(1)
-            conf.append(pred_box[3])
+        
+        conf.append(pred_box[3])
+
+    return tp, fp, conf
 
     # Check if we have any matches. If not, just return a "no predictions" array.
     # if len(match_data['trans_err']) == 0:
@@ -161,7 +164,7 @@ def accumulate(gt_boxes: List,
     conf = np.interp(rec_interp, rec, conf, right=0)
     rec = rec_interp
 
-    import matplotlib.pyplot as plt
+    # import matplotlib.pyplot as plt
     # plt.plot(rec[10:], prec[10:])
     # plt.plot(rec, prec)
     # plt.xlabel('Recall')
@@ -206,37 +209,108 @@ def accumulate(gt_boxes: List,
     return prec, rec, conf
 
 
-def calc_ap(precision, min_recall: float, min_precision: float) -> float:
-    # Calculated average precision. 
+# def calc_ap2(precision, min_recall: float, min_precision: float) -> float:
+#     # Calculated average precision. 
 
-    assert 0 <= min_precision < 1
-    assert 0 <= min_recall <= 1
+#     assert 0 <= min_precision < 1
+#     assert 0 <= min_recall <= 1
 
-    prec = np.copy(precision)
-    prec = prec[round(100 * min_recall) + 1:]  # Clip low recalls. +1 to exclude the min recall bin.
-    prec -= min_precision  # Clip low precision
-    prec[prec < 0] = 0
-    return float(np.mean(prec)) / (1.0 - min_precision)
+#     prec = np.copy(precision)
+#     prec = prec[round(100 * min_recall) + 1:]  # Clip low recalls. +1 to exclude the min recall bin.
+#     prec -= min_precision  # Clip low precision
+#     prec[prec < 0] = 0
+#     return float(np.mean(prec)) / (1.0 - min_precision)
 
 
-def calc_sweep_metrics(output, target):
-    gt_anns = extract_gt_anns(target) # [[x, y, sample_num], ...]
-    pred_anns = extract_pred_anns(output) # [[x, y, sample_num, confidence], ...]
+# def calc_sweep_metrics(output, target):
+#     gt_anns = extract_gt_anns(target) # [[(x, y, sample_num)], ...]
+#     pred_anns = extract_pred_anns(output) # [(x, y, sample_num, confidence), ...]
 
-    # print(gt_anns)
-    # print(pred_anns)
-    # print(pred_anns.shape)
-    # print(len(gt_anns))
-    # print(len(pred_anns))
+#     # print(gt_anns)
+#     # print(pred_anns)
+#     # print(pred_anns.shape)
+#     # print(len(gt_anns))
+#     # print(len(pred_anns))
 
-    dist_thresholds = [0.5, 1.0, 2.0, 4.0]
+#     dist_thresholds = [0.5, 1.0, 2.0, 4.0]
+#     aps = []
+
+#     for dist_thresh in dist_thresholds:
+#         prec, rec, conf = accumulate(deepcopy(gt_anns.copy), pred_anns.copy(), dist_thresh, verbose=False)
+#         ap = calc_ap2(prec, 0.1, 0.1)
+#         aps.append(ap)
+
+#     # print(aps)
+#     # print(np.mean(aps))
+#     return np.mean(aps)
+
+
+def calc_ap(thresh_tp_fp_conf, num_gt, ap_dist_thresh, min_precision=0.1, min_recall=0.1):
     aps = []
+    print(thresh_tp_fp_conf.shape)
 
-    for dist_thresh in dist_thresholds:
-        prec, rec, conf = accumulate(gt_anns.copy(), pred_anns.copy(), dist_thresh, verbose=False)
-        ap = calc_ap(prec, 0.1, 0.1)
+    assert len(ap_dist_thresh) == len(thresh_tp_fp_conf)
+    
+    for i in range(len(thresh_tp_fp_conf)):
+        tp_fp_conf = np.array(thresh_tp_fp_conf[i, :, :])
+        # print(tp_fp_conf)
+
+        #sort by confidence decreasing
+        tp_fp_conf = tp_fp_conf[:, tp_fp_conf[2, :].argsort()[::-1]]
+        # print(tp_fp_conf)
+
+        tp = np.cumsum(tp_fp_conf[0, :]).astype(float)
+        fp = np.cumsum(tp_fp_conf[1, :]).astype(float)
+        prec = tp / (tp + fp)
+        rec = tp / float(num_gt)
+
+        rec_interp = np.linspace(0, 1, 101)  # 101 steps, from 0% to 100% recall.
+        prec = np.interp(rec_interp, rec, prec, right=0)
+        conf = np.interp(rec_interp, rec, tp_fp_conf[2, :], right=0)
+        rec = rec_interp
+
+        assert 0 <= min_precision < 1
+        assert 0 <= min_recall <= 1
+
+        prec_i = np.copy(prec)
+        prec_i = prec_i[round(100 * min_recall) + 1:]  # Clip low recalls. +1 to exclude the min recall bin.
+        prec_i -= min_precision  # Clip low precision
+        prec_i[prec_i < 0] = 0
+        ap = float(np.mean(prec_i)) / (1.0 - min_precision)
         aps.append(ap)
 
-    # print(aps)
-    # print(np.mean(aps))
-    return np.mean(aps)
+        # import matplotlib.pyplot as plt
+        # plt.plot(rec, prec, label=f'threshold {ap_dist_thresh[i]}')
+        # plt.xlabel('Recall')
+        # plt.ylabel('Precision')
+        # plt.title('Precision-Recall Curves')
+        # plt.xlim([0, 1])
+        # plt.ylim([0, 1])
+        # #plot horizontal black line at 0.1
+        # plt.axhline(y=0.1, color='k', linestyle='--')
+        # plt.axvline(x=0.1, color='k', linestyle='--')
+        # plt.legend()
+
+
+    return np.array(aps)
+
+
+def get_tp_fp_conf(output, target, dist_thresholds):
+    gt_anns = extract_gt_anns(target) # [[(x, y, sample_num)], ...]
+    pred_anns = extract_pred_anns(output) # [(x, y, sample_num, confidence), ...]
+
+
+    npos = np.sum([len(x) for x in gt_anns])
+
+    tp_fp_conf = []
+
+    for dist_thresh in dist_thresholds:
+        tp, fp, conf = accumulate(deepcopy(gt_anns), pred_anns.copy(), dist_thresh, verbose=False)
+        tp_fp_conf.append((tp, fp, conf))
+
+    tp_fp_conf = np.array(tp_fp_conf)
+    # print(npos)
+    # print(len(pred_anns))
+    # print(tp_fp_conf.shape)
+    
+    return tp_fp_conf, npos

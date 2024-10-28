@@ -12,6 +12,7 @@ from utils import plot_proc_data, calc_ego_vel, split_time, split_ang_bins, filt
 # %matplotlib inline
 
 # %%
+os.chdir('./viz_preproc')
 
 with open('../run_paths.json') as f:
     paths = json.load(f)
@@ -27,9 +28,10 @@ OUT_PREPROC_PATH = './output_preproc'
 
 #Keep only moving targets
 RadarPointCloud.default_filters()
-RadarPointCloud.dynprop_states = [0, 2, 6]
+# RadarPointCloud.dynprop_states = [0, 2, 6]
 # RadarPointCloud.disable_filters()
 
+# %%
 nusc = NuScenes(version=DATASET_NAME, dataroot=DATASET_PATH, verbose=True)
 
 
@@ -37,7 +39,7 @@ nusc = NuScenes(version=DATASET_NAME, dataroot=DATASET_PATH, verbose=True)
 # total_radar_points = 0
 # total_used_radar_points = 0
 # %%
-def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=6, ang_bins=360, min_radar_pts=1, min_lidar_pts=1, save_output=False, out_path=None):
+def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=6, ang_bins=360, min_radar_pts=1, min_lidar_pts=1, save_output=True, out_path=None, vis_level=0, only_vehicle=True, only_moving=False):
     if save_output:
         if out_path is None:
             out_path = './output_preproc'
@@ -139,8 +141,9 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
 
         # FILTER ANNOTATIONS
         filtered_anns = filter_boxes(nusc, cur_sample['anns'],
-                                     vis_level=0,
-                                     only_vehicle=True,
+                                     vis_level=vis_level,
+                                     only_vehicle=only_vehicle,
+                                     only_moving=only_moving,
                                      min_radar_pts=min_radar_pts,
                                      min_lidar_pts=min_lidar_pts,
                                      skip_filter=False)
@@ -230,7 +233,7 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
             else:
                 ann_att = 'other_obj.static'
 
-            box_att = ATTRIBUTE_NAMES[ann_att] 
+            box_att = ATTRIBUTE_NAMES[ann_att]
 
             sweep_anns = np.vstack((sweep_anns,
                 np.hstack((
@@ -286,7 +289,7 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
             # print(sweep_anns)
 
     if save_output:
-        np.save(os.path.join(out_path, scene_name + '.npy'), result, allow_pickle=True)
+        # np.save(os.path.join(out_path, scene_name + '.npy'), result, allow_pickle=True)
         print(f'Elapsed time preproc {scene_name}:', timeit.default_timer() - start_time)
 
     return result
@@ -294,8 +297,9 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
 # %%
 
 start_time = timeit.default_timer()
-with Pool(16) as p:
+with Pool(32) as p:
     res = p.map(partial(preproc_scene, plots=False, save_output=True), range(len(nusc.scene)))
+    # res = p.map(partial(preproc_scene, plots=False, save_output=True), range(32))
 print('\n\nElapsed TOTAL time preproc dataset:', timeit.default_timer() - start_time)
 
 start_time = timeit.default_timer()
@@ -305,14 +309,8 @@ print('Elapsed time reduce + save dataset:', timeit.default_timer() - start_time
 
 
 # %%
-# start_time = timeit.default_timer()
-# x = np.load('nuscenes_mare_preproc.npy', allow_pickle=True)
-# print('Elapsed time load dataset:', timeit.default_timer() - start_time)
 
-
-# %%
-
-# res = preproc_scene(nusc, 0, nr_samps=50, plots=False, max_range=50, nr_sweeps=6, ang_bins=360, save_output=True, min_radar_pts=1, min_lidar_pts=0)
+# res = preproc_scene(7, nr_samps=4, plots=True, max_range=50, nr_sweeps=6, ang_bins=360, save_output=False, min_radar_pts=1, min_lidar_pts=1, vis_level=0, only_vehicle=False, only_moving=False)
 
 # render_whole_sample(nusc, nr_scene=0, nr_sample=2)
 

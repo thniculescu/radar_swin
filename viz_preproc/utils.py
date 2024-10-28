@@ -259,7 +259,7 @@ def calc_ego_vel(nusc, cur_sample):
     return timestamps, ego_vel_trans
 
 
-def filter_boxes(nusc, anns, max_range=60, vis_level=0, min_radar_pts=1, min_lidar_pts=1, only_vehicle=True, skip_filter=False):
+def filter_boxes(nusc, anns, max_range=60, vis_level=0, min_radar_pts=1, min_lidar_pts=1, only_vehicle=True, only_moving=False, skip_filter=False):
     if skip_filter:
         return anns
     filtered_anns = []
@@ -268,6 +268,18 @@ def filter_boxes(nusc, anns, max_range=60, vis_level=0, min_radar_pts=1, min_lid
         # pprint.pprint(sample_ann)
         if only_vehicle and not sample_ann["category_name"].startswith('vehicle'):
             continue
+
+        if len(sample_ann['attribute_tokens']) > 0:
+            ann_att = nusc.get('attribute', sample_ann['attribute_tokens'][0])['name']
+        else:
+            ann_att = 'other_obj.static'
+
+        if only_moving and \
+            ann_att != 'vehicle.moving' and \
+            ann_att != 'cycle.with_rider' and \
+            ann_att != 'pedestrian.moving':
+            continue
+
         if int(sample_ann["visibility_token"]) < vis_level:
             continue
         if int(sample_ann["num_radar_pts"]) < min_radar_pts:

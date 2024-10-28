@@ -31,7 +31,7 @@ from logger import create_logger
 from utils import load_checkpoint, load_pretrained, save_checkpoint, NativeScalerWithGradNormCount, auto_resume_helper, reduce_tensor
 from losses import RadarSwinLoss
 import torchinfo
-from metrics import calc_sweep_metrics
+from metrics import calc_ap, get_tp_fp_conf
 from do_plots import do_plots
 
 # pytorch major version (1.x or 2.x)
@@ -95,7 +95,9 @@ def parse_option():
     # CONFIG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radar-swin/configs/radarswin/bbox_vr_6sw_biglast.yaml'
     print("CWDDD:", os.getcwd())
 
-    CONFIG_PATH = './configs/radarswin/bbox_no_merge_best.yaml'
+    # CONFIG_PATH = './configs/radarswin/bbox_no_merge_best.yaml'
+    # CONFIG_PATH = './configs/radarswin/alpha_small.yaml'
+    CONFIG_PATH = './configs/radarswin/alpha_small_static.yaml'
 
     parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
     parser.add_argument('--cfg', type=str, required=False, metavar="FILE", help='path to config file', default=CONFIG_PATH)
@@ -277,8 +279,11 @@ def validate(config, data_loader, model, logger):
 
     batch_time = AverageMeter()
     loss_meter = AverageMeter()
-    detA2_meter = AverageMeter()
     AP_meter = AverageMeter()
+    ap_dist_tresh = np.array([0.5, 1.0, 2.0, 4.0])
+    # ap_dist_tresh = np.array([1])
+    thresh_tp_fp_conf = np.empty((len(ap_dist_tresh), 3, 0))
+    total_gt = 0
 
     end = time.time()
     for idx, (images, target) in enumerate(data_loader):
@@ -291,15 +296,16 @@ def validate(config, data_loader, model, logger):
 
         # measure accuracy and record loss
         loss = criterion(output, target)
-        AP = calc_sweep_metrics(output, target)
 
-        # # detA2 = reduce_tensor(detA2)
-        # AP = reduce_tensor(AP)
+        #calc AP
+        tp_fp_conf, num_gt = get_tp_fp_conf(output, target, ap_dist_tresh)
+        total_gt += num_gt
+        thresh_tp_fp_conf = np.dstack((thresh_tp_fp_conf, tp_fp_conf))
+        # print(thresh_tp_fp_conf.shape)
+
         loss = reduce_tensor(loss)
 
         loss_meter.update(loss.item(), target.size(0))
-        # # detA2_meter.update(detA2.item(), target.size(0))
-        AP_meter.update(AP.item(), target.size(0))
 
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -312,8 +318,11 @@ def validate(config, data_loader, model, logger):
                 f'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                 f'Loss {loss_meter.val:.4f} ({loss_meter.avg:.4f})\t'
                 # f'detA@2m {detA2_meter.val:.3f} ({detA2_meter.avg:.3f})\t'
-                f'AP {AP_meter.val:.3f} ({AP_meter.avg:.3f})\t'
+                # f'AP {AP_meter.val:.3f} ({AP_meter.avg:.3f})\t'
                 f'Mem {memory_used:.0f}MB')
+    
+    aps = calc_ap(thresh_tp_fp_conf, total_gt, ap_dist_tresh)
+    logger.info(f'AP {np.sum(aps) / len(aps):.3f} ({aps})\t')
     # logger.info(f' * Acc@1 {detA2_meter.avg:.3f} Acc@5 {AP_meter.avg:.3f}')
     # return detA2_meter.avg, AP_meter.avg, loss_meter.avg
     return 44, AP_meter.avg, loss_meter.avg
@@ -434,16 +443,24 @@ if __name__ == '__main__':
     # torch.cuda.set_device(2)
 
     os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '29500'
+    os.environ['MASTER_PORT'] = '29501'
     # os.environ['WORLD_SIZE'] = '2'
     # os.environ['LOCAL_RANK'] = '2'
     # os.environ['RANK'] = '0'
-    world_size = 1
+    
+    # os.environ['CUDA_VISIBLE_DEVICES'] = '5'
+    # vis_devs = os.environ['CUDA_VISIBLE_DEVICES'].split(',')
+    print(torch.cuda.device_count())
+    print([torch.cuda.get_device_properties(x) for x in range(torch.cuda.device_count())])
+    
+    #vis_devs = [int(x) for x in os.environ['CUDA_VISIBLE_DEVICES'].split(',')]    
+    world_size = torch.cuda.device_count()
+    #print('CUDA_VISIBLE_DEVICES:', vis_devs)
+    #print('world_size:', world_size)
 
     # torch.multiprocessing.spawn(ddp_main, 
     #                             args=(world_size, [2, 3]),
     #                             nprocs=world_size,
     #                             join=True)
-    ddp_main(0, world_size, [0])
 
-    
+    ddp_main(0, world_size, list(range(world_size)))

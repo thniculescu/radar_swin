@@ -76,17 +76,20 @@ def do_plots(config, data_loader_val, model):
     model.cuda()
 
     # take a sample from the validation set
+    total = 0
     for i, (samples, target) in enumerate(data_loader_val):
         print("validation samples shape: ", samples.shape)
+        # total += samples.shape[0]
+        # print("total samples: ", total)
+        # continue
 
         with torch.amp.autocast('cuda', enabled=config.AMP_ENABLE):
             outputs = model(samples)
 
         # pred      : B, 360, 8     : hmap, range, orientation [sin, cos], size [w l], velocity [vr vt]
         # target    : B, 360, 8 + 1 : hmap, range, orientation [sin, cos], size [w l], velocity [vr vt], mask
-
-        # for j in [2]:
-        for j in np.random.randint(50, 100, 4):
+        # for j in range(38, 42):
+        for j in np.random.randint(15, 80, 8):
             sweeps = samples[j]
             sweeps = sweeps.cpu().numpy().transpose(1, 2, 0)
 
@@ -95,12 +98,18 @@ def do_plots(config, data_loader_val, model):
 
             mask = anns[:, -1]
 
+            sum_mask = np.sum(mask)
+            print("sum mask", sum_mask)
+            # if sum_mask == 0:
+            #     continue
+
+
             preds = outputs[j]
             preds = preds.cpu().detach().numpy()
             #make a mask where preds[x, 0] is larger than both neighbours
             peak_preds_mask = np.logical_and(preds[:, 0] > np.roll(preds[:, 0], 1), preds[:, 0] > np.roll(preds[:, 0], -1))
             #make a mask out of preds[:, 0] > 0.25
-            preds_mask = np.ma.masked_where(preds[:, 0] >= 0.25, preds[:, 0])
+            preds_mask = np.ma.masked_where(preds[:, 0] >= 0.40, preds[:, 0])
             preds_mask = np.ma.getmask(preds_mask)
 
             #intersect the two masks
@@ -120,7 +129,7 @@ def do_plots(config, data_loader_val, model):
                 ax.scatter(np.radians(np.arange(360)), sweeps[idx, :, 0], marker='o', c='b', s=5, label='radar_sweeps')
 
             # ax.scatter(np.radians(np.arange(360)), anns[:, 1], marker='x', c='r', s=60)
-            ax.set_ylim(0, 60)
+            ax.set_ylim(0, 50)
 
 
             plot_bboxes(ax, preds, ground_truth=False)
@@ -141,11 +150,13 @@ def do_plots(config, data_loader_val, model):
             
             legend_without_duplicate_labels(ax)
             
-            fig, ax = plt.subplots(figsize=(8, 8))
+            fig, ax = plt.subplots(figsize=(12, 3))
+            # fig, ax = plt.subplots(figsize=(8, 8))
             ax.plot(np.arange(360), anns[:, 0], c='r')
             ax.plot(np.arange(360), preds[:, 0], c='g')
+            ax.set_ylim(0, 1)
             #plot horizontal black line at 0.25
-            ax.axhline(y=0.25, color='k', linestyle='--', label='selection threshold')
+            ax.axhline(y=0.40, color='k', linestyle='--', label='selection threshold')
             ax.set_title('heatmap')
             ax.legend()
             ax.set_xlabel('angle bin')
