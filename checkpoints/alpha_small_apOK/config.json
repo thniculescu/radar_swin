@@ -43,16 +43,16 @@ MODEL:
   DROP_RATE: 0.0
   NAME: radarswin_tiny
   NUM_CLASSES: 1
-  PRETRAINED: ./radarswin_tiny/alpha_small_static/ckpt_epoch_255.pth
+  PRETRAINED: ''
   RADARSWIN:
     APE: false
     BBOX_LOSS_WEIGHT: 1.0
     DEPTHS:
-    - 6
-    - 12
-    - 6
-    - 6
-    EMBED_DIM: 24
+    - 8
+    - 8
+    - 2
+    - 2
+    EMBED_DIM: 12
     IN_CHANS: 3
     MERGE_FACTORS:
     - - 1
@@ -65,10 +65,10 @@ MODEL:
       - 1
     MLP_RATIO: 4.0
     NUM_HEADS:
-    - 2
-    - 4
-    - 4
-    - 4
+    - 1
+    - 1
+    - 1
+    - 1
     OUT_REG_HEADS:
     - 1
     - 1
@@ -91,13 +91,13 @@ MODEL:
     VELOCITY_LOSS_WEIGHT: 0.1
     WINDOW_SIZES:
     - - 6
-      - 6
+      - 12
     - - 6
-      - 12
+      - 6
     - - 3
-      - 12
+      - 6
     - - 1
-      - 12
+      - 6
   RESUME: ''
   TYPE: radarswin
 OUTPUT: radarswin_tiny/default

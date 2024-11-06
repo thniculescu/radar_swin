@@ -118,7 +118,7 @@ class RadarSwinDataSet(Dataset):
 
         self.sweeps = [(scene_id, sweep_nr) for scene_id in self.scene_ids for sweep_nr in range(len(self.data[scene_id]['radar']))]
 
-        print("sweeps", self.sweeps[:50])
+        # print("sweeps", self.sweeps[:50])
 
         #shuffle sweeps
         # np.random.shuffle(self.sweeps)

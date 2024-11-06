@@ -18,19 +18,28 @@ def extract_gt_anns(target):
     return list_anns
 
 
-def extract_pred_anns(output):
+def extract_pred_anns(output, pred_thresh):
     list_anns = np.empty((0, 4))
     for i in range(output.size(0)):
         gigi = output[i, :, :].detach().cpu().numpy()
-        # anns_i = []
-        for j in range(360):
-            if  gigi[j, 0] >= 0.25 and  gigi[j, 0] >  gigi[(j + 359) % 360, 0] and  gigi[j, 0] >  gigi[(j + 1) % 360, 0]:
-                r = gigi[j, 1]
-                th = j
-                # anns_i.append((r * np.cos(th * np.pi / 180), r * np.sin(th * np.pi / 180), i, gigi[j, 0]))
-                list_anns = np.vstack((list_anns, np.array([r * np.cos(th * np.pi / 180), r * np.sin(th * np.pi / 180), i, gigi[j, 0]])))
 
-        # list_anns.append(anns_i)
+        mask = gigi[:, 0] >= pred_thresh
+        prev_values = np.roll(gigi[:, 0], 1)
+        next_values = np.roll(gigi[:, 0], -1)
+
+        local_max = mask & (gigi[:, 0] > prev_values) & (gigi[:, 0] > next_values)
+
+        indices = np.where(local_max)[0]
+
+        r_values = gigi[indices, 1]
+        thetas = indices * np.pi / 180
+        x_coords = r_values * np.cos(thetas)
+        y_coords = r_values * np.sin(thetas)
+
+        new_anns = np.column_stack((x_coords, y_coords, np.full_like(indices, i), gigi[indices, 0]))
+
+        list_anns = np.vstack((list_anns, new_anns))
+
     return list_anns
 
 
@@ -94,8 +103,6 @@ def accumulate(gt_boxes: List,
         match_gt_idx = None
 
         for gt_idx, gt_box in enumerate(gt_boxes[int(pred_box[2])]):
-            # print(gt_idx)
-            # print(gt_box)
 
             # Find closest match among ground truth boxes
             this_distance = np.linalg.norm(np.array([gt_box[0], gt_box[1]]) - np.array([pred_box[0], pred_box[1]]))
@@ -116,20 +123,6 @@ def accumulate(gt_boxes: List,
             tp.append(1)
             fp.append(0)
 
-            # Since it is a match, update match data also.
-            # gt_box_match = gt_boxes[pred_box.sample_token][match_gt_idx]
-
-            # match_data['trans_err'].append(center_distance(gt_box_match, pred_box))
-            # match_data['vel_err'].append(velocity_l2(gt_box_match, pred_box))
-            # match_data['scale_err'].append(1 - scale_iou(gt_box_match, pred_box))
-
-            # Barrier orientation is only determined up to 180 degree. (For cones orientation is discarded later)
-            # period = np.pi if class_name == 'barrier' else 2 * np.pi
-            # match_data['orient_err'].append(yaw_diff(gt_box_match, pred_box, period=period))
-
-            # match_data['attr_err'].append(1 - attr_acc(gt_box_match, pred_box))
-            # match_data['conf'].append(pred_box.detection_score)
-
         else:
             # No match. Mark this as a false positive.
             tp.append(0)
@@ -138,112 +131,6 @@ def accumulate(gt_boxes: List,
         conf.append(pred_box[3])
 
     return tp, fp, conf
-
-    # Check if we have any matches. If not, just return a "no predictions" array.
-    # if len(match_data['trans_err']) == 0:
-    #     return DetectionMetricData.no_predictions()
-
-    # ---------------------------------------------
-    # Calculate and interpolate precision and recall
-    # ---------------------------------------------
-
-    # Accumulate.
-    tp = np.cumsum(tp).astype(float)
-    fp = np.cumsum(fp).astype(float)
-    conf = np.array(conf)
-
-    # Calculate precision and recall.
-    prec = tp / (fp + tp)
-    rec = tp / float(npos)
-
-    # print('prec:', prec)
-    # print('rec:', rec)
-
-    rec_interp = np.linspace(0, 1, 101)  # 101 steps, from 0% to 100% recall.
-    prec = np.interp(rec_interp, rec, prec, right=0)
-    conf = np.interp(rec_interp, rec, conf, right=0)
-    rec = rec_interp
-
-    # import matplotlib.pyplot as plt
-    # plt.plot(rec[10:], prec[10:])
-    # plt.plot(rec, prec)
-    # plt.xlabel('Recall')
-    # plt.ylabel('Precision')
-    # plt.title(f'Precision-Recall Curve for threshold {dist_th}')
-    # plt.xlim([0, 1])
-    # plt.ylim([0, 1])
-    # plt.grid()
-    # plt.show()
-    # plt.plot(rec, conf)
-    # plt.show()
-
-    # import sys
-    # sys.exit()
-
-    # ---------------------------------------------
-    # Re-sample the match-data to match, prec, recall and conf.
-    # ---------------------------------------------
-
-    # for key in match_data.keys():
-    #     if key == "conf":
-    #         continue  # Confidence is used as reference to align with fp and tp. So skip in this step.
-
-    #     else:
-    #         # For each match_data, we first calculate the accumulated mean.
-    #         tmp = cummean(np.array(match_data[key]))
-
-    #         # Then interpolate based on the confidences. (Note reversing since np.interp needs increasing arrays)
-    #         match_data[key] = np.interp(conf[::-1], match_data['conf'][::-1], tmp[::-1])[::-1]
-
-    # ---------------------------------------------
-    # Done. Instantiate MetricData and return
-    # ---------------------------------------------
-    # return DetectionMetricData(recall=rec,
-    #                            precision=prec,
-    #                            confidence=conf,
-    #                            trans_err=match_data['trans_err'],
-    #                            vel_err=match_data['vel_err'],
-    #                            scale_err=match_data['scale_err'],
-    #                            orient_err=match_data['orient_err'],
-    #                            attr_err=match_data['attr_err'])
-    return prec, rec, conf
-
-
-# def calc_ap2(precision, min_recall: float, min_precision: float) -> float:
-#     # Calculated average precision. 
-
-#     assert 0 <= min_precision < 1
-#     assert 0 <= min_recall <= 1
-
-#     prec = np.copy(precision)
-#     prec = prec[round(100 * min_recall) + 1:]  # Clip low recalls. +1 to exclude the min recall bin.
-#     prec -= min_precision  # Clip low precision
-#     prec[prec < 0] = 0
-#     return float(np.mean(prec)) / (1.0 - min_precision)
-
-
-# def calc_sweep_metrics(output, target):
-#     gt_anns = extract_gt_anns(target) # [[(x, y, sample_num)], ...]
-#     pred_anns = extract_pred_anns(output) # [(x, y, sample_num, confidence), ...]
-
-#     # print(gt_anns)
-#     # print(pred_anns)
-#     # print(pred_anns.shape)
-#     # print(len(gt_anns))
-#     # print(len(pred_anns))
-
-#     dist_thresholds = [0.5, 1.0, 2.0, 4.0]
-#     aps = []
-
-#     for dist_thresh in dist_thresholds:
-#         prec, rec, conf = accumulate(deepcopy(gt_anns.copy), pred_anns.copy(), dist_thresh, verbose=False)
-#         ap = calc_ap2(prec, 0.1, 0.1)
-#         aps.append(ap)
-
-#     # print(aps)
-#     # print(np.mean(aps))
-#     return np.mean(aps)
-
 
 def calc_ap(thresh_tp_fp_conf, num_gt, ap_dist_thresh, min_precision=0.1, min_recall=0.1):
     aps = []
@@ -274,6 +161,7 @@ def calc_ap(thresh_tp_fp_conf, num_gt, ap_dist_thresh, min_precision=0.1, min_re
 
         prec_i = np.copy(prec)
         prec_i = prec_i[round(100 * min_recall) + 1:]  # Clip low recalls. +1 to exclude the min recall bin.
+
         prec_i -= min_precision  # Clip low precision
         prec_i[prec_i < 0] = 0
         ap = float(np.mean(prec_i)) / (1.0 - min_precision)
@@ -295,22 +183,22 @@ def calc_ap(thresh_tp_fp_conf, num_gt, ap_dist_thresh, min_precision=0.1, min_re
     return np.array(aps)
 
 
-def get_tp_fp_conf(output, target, dist_thresholds):
+def get_tp_fp_conf(output, target, dist_thresholds, pred_thresh):
     gt_anns = extract_gt_anns(target) # [[(x, y, sample_num)], ...]
-    pred_anns = extract_pred_anns(output) # [(x, y, sample_num, confidence), ...]
+    pred_anns = extract_pred_anns(output, pred_thresh) # [(x, y, sample_num, confidence), ...]
 
 
     npos = np.sum([len(x) for x in gt_anns])
 
-    tp_fp_conf = []
+    tp_fp_conf = np.empty((len(dist_thresholds), 3, len(pred_anns)))
 
-    for dist_thresh in dist_thresholds:
-        tp, fp, conf = accumulate(deepcopy(gt_anns), pred_anns.copy(), dist_thresh, verbose=False)
-        tp_fp_conf.append((tp, fp, conf))
+    for i, dist_thresh in enumerate(dist_thresholds):
+        tp, fp, conf = accumulate(deepcopy(gt_anns), pred_anns, dist_thresh, verbose=False)
+        # tp_fp_conf.append((tp, fp, conf))
+        tp_fp_conf[i, 0, :] = tp
+        tp_fp_conf[i, 1, :] = fp
+        tp_fp_conf[i, 2, :] = conf
 
-    tp_fp_conf = np.array(tp_fp_conf)
-    # print(npos)
-    # print(len(pred_anns))
-    # print(tp_fp_conf.shape)
+    # tp_fp_conf = np.array(tp_fp_conf)
     
     return tp_fp_conf, npos

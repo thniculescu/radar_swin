@@ -14,13 +14,11 @@ AUG:
   REPROB: 0.25
 BASE:
 - ''
-CENTERNET:
-  PRED_HEATMAP_THR: 0.25
 DATA:
   BATCH_SIZE: 128
   CACHE_MODE: part
   DATASET: nuscenes
-  DATA_PATH: ../preproc_datasets/50m_1r_1l_0v_nostaticrad_onlyvehicles_onlymoving/all_scenes.npy
+  DATA_PATH: ../preproc_datasets/50m_1r_1l_nostaticrad_onlyvehicles_onlymoving/all_scenes.npy
   INPUT_SIZE:
   - 6
   - 360
@@ -32,18 +30,12 @@ EVAL_MODE: true
 FUSED_LAYERNORM: false
 FUSED_WINDOW_PROCESS: false
 LOCAL_RANK: 0
-METRICS:
-  AP_THR:
-  - 0.5
-  - 1.0
-  - 2.0
-  - 4.0
 MODEL:
   DROP_PATH_RATE: 0.2
   DROP_RATE: 0.0
   NAME: radarswin_tiny
   NUM_CLASSES: 1
-  PRETRAINED: ./radarswin_tiny/alpha_small_static/ckpt_epoch_255.pth
+  PRETRAINED: ''
   RADARSWIN:
     APE: false
     BBOX_LOSS_WEIGHT: 1.0
@@ -115,7 +107,7 @@ TRAIN:
   AUTO_RESUME: false
   BASE_LR: 0.0016
   CLIP_GRAD: 5.0
-  EPOCHS: 400
+  EPOCHS: 1000
   LAYER_DECAY: 1.0
   LR_SCHEDULER:
     DECAY_EPOCHS: 30

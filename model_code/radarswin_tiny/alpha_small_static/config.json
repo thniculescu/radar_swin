@@ -20,7 +20,7 @@ DATA:
   BATCH_SIZE: 128
   CACHE_MODE: part
   DATASET: nuscenes
-  DATA_PATH: ../preproc_datasets/50m_1r_1l_0v_nostaticrad_onlyvehicles_onlymoving/all_scenes.npy
+  DATA_PATH: ../preproc_datasets/50m_1r_1l_0v_onlyvehicles/all_scenes.npy
   INPUT_SIZE:
   - 6
   - 360
@@ -28,7 +28,7 @@ DATA:
   PIN_MEMORY: true
   VAL_RATIO: 0.2
 ENABLE_AMP: false
-EVAL_MODE: true
+EVAL_MODE: false
 FUSED_LAYERNORM: false
 FUSED_WINDOW_PROCESS: false
 LOCAL_RANK: 0
@@ -43,7 +43,7 @@ MODEL:
   DROP_RATE: 0.0
   NAME: radarswin_tiny
   NUM_CLASSES: 1
-  PRETRAINED: ./radarswin_tiny/alpha_small_static/ckpt_epoch_255.pth
+  PRETRAINED: ./radarswin_tiny/default/ckpt_epoch_255.pth
   RADARSWIN:
     APE: false
     BBOX_LOSS_WEIGHT: 1.0

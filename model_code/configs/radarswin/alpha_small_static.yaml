@@ -1,7 +1,7 @@
 DATA:
   DATASET: 'nuscenes'
-  # DATA_PATH: '../preproc_datasets/50m_1r_0l_0v_nostaticrad_onlyvehicles_onlymoving/all_scenes.npy'  #THIS TRAIN
-  DATA_PATH: '../preproc_datasets/50m_1r_1l_0v_onlyvehicles/all_scenes.npy'
+  DATA_PATH: '../preproc_datasets/50m_1r_1l_0v_nostaticrad_onlyvehicles_onlymoving/all_scenes.npy'  #THIS TRAIN
+  # DATA_PATH: '../preproc_datasets/50m_1r_1l_0v_onlyvehicles/all_scenes.npy'
   INPUT_SIZE: (6, 360)
   BATCH_SIZE: 128
   VAL_RATIO: 0.2
@@ -12,8 +12,8 @@ MODEL:
   DROP_PATH_RATE: 0.2
   NUM_CLASSES: 1
 
-  # RESUME: './radarswin_tiny/default/ckpt_epoch_255.pth'
-  PRETRAINED: './radarswin_tiny/default/ckpt_epoch_255.pth'
+  # RESUME: './radarswin_tiny/alpha_small_static/ckpt_epoch_255.pth'
+  PRETRAINED: './radarswin_tiny/alpha_small_static/ckpt_epoch_255.pth'
   
   RADARSWIN:
     PATCH_SIZE: [1, 1]
@@ -34,7 +34,13 @@ MODEL:
     RANGE_LOSS_WEIGHT: 0.1
     BBOX_LOSS_WEIGHT: 1.0
     VELOCITY_LOSS_WEIGHT: 0.1
-  
+
+CENTERNET:
+  PRED_HEATMAP_THR: 0.25
+
+METRICS:
+  AP_THR: [0.5, 1.0, 2.0, 4.0]
+
 TRAIN:
   EPOCHS: 400
   WARMUP_EPOCHS: 4

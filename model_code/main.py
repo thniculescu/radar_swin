@@ -95,9 +95,9 @@ def parse_option():
     # CONFIG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radar-swin/configs/radarswin/bbox_vr_6sw_biglast.yaml'
     print("CWDDD:", os.getcwd())
 
-    # CONFIG_PATH = './configs/radarswin/bbox_no_merge_best.yaml'
     # CONFIG_PATH = './configs/radarswin/alpha_small.yaml'
     CONFIG_PATH = './configs/radarswin/alpha_small_static.yaml'
+    # CONFIG_PATH = './configs/radarswin/alpha_small_apOK.yaml'
 
     parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
     parser.add_argument('--cfg', type=str, required=False, metavar="FILE", help='path to config file', default=CONFIG_PATH)
@@ -175,7 +175,7 @@ def main(config, logger):
     if config.MODEL.PRETRAINED and (not config.MODEL.RESUME):
         # for chk_nr in range(5, 475, 5):
         #     config.defrost()
-        #     config.MODEL.PRETRAINED = f'/imec/other/dl4ms/nicule52/work/radarswin/radarswin_checkpoints/g_big400/ckpt_epoch_{chk_nr}.pth'
+        #     config.MODEL.PRETRAINED = f'./radarswin_tiny/alpha_small/ckpt_epoch_{chk_nr}.pth'
         #     config.freeze()
 
         load_pretrained(config, model_without_ddp, logger)
@@ -184,7 +184,8 @@ def main(config, logger):
 
         if config.EVAL_MODE:
             do_plots(config, data_loader_val, model)
-            return
+
+        return
 
     if config.THROUGHPUT_MODE:
         throughput(data_loader_val, model, logger)
@@ -280,9 +281,9 @@ def validate(config, data_loader, model, logger):
     batch_time = AverageMeter()
     loss_meter = AverageMeter()
     AP_meter = AverageMeter()
-    ap_dist_tresh = np.array([0.5, 1.0, 2.0, 4.0])
+    
     # ap_dist_tresh = np.array([1])
-    thresh_tp_fp_conf = np.empty((len(ap_dist_tresh), 3, 0))
+    thresh_tp_fp_conf = np.empty((len(config.METRICS.AP_THR), 3, 0))
     total_gt = 0
 
     end = time.time()
@@ -298,7 +299,7 @@ def validate(config, data_loader, model, logger):
         loss = criterion(output, target)
 
         #calc AP
-        tp_fp_conf, num_gt = get_tp_fp_conf(output, target, ap_dist_tresh)
+        tp_fp_conf, num_gt = get_tp_fp_conf(output, target, config.METRICS.AP_THR, config.CENTERNET.PRED_HEATMAP_THR)
         total_gt += num_gt
         thresh_tp_fp_conf = np.dstack((thresh_tp_fp_conf, tp_fp_conf))
         # print(thresh_tp_fp_conf.shape)
@@ -321,7 +322,7 @@ def validate(config, data_loader, model, logger):
                 # f'AP {AP_meter.val:.3f} ({AP_meter.avg:.3f})\t'
                 f'Mem {memory_used:.0f}MB')
     
-    aps = calc_ap(thresh_tp_fp_conf, total_gt, ap_dist_tresh)
+    aps = calc_ap(thresh_tp_fp_conf, total_gt, config.METRICS.AP_THR)
     logger.info(f'AP {np.sum(aps) / len(aps):.3f} ({aps})\t')
     # logger.info(f' * Acc@1 {detA2_meter.avg:.3f} Acc@5 {AP_meter.avg:.3f}')
     # return detA2_meter.avg, AP_meter.avg, loss_meter.avg
@@ -443,7 +444,7 @@ if __name__ == '__main__':
     # torch.cuda.set_device(2)
 
     os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '29501'
+    os.environ['MASTER_PORT'] = '29502'
     # os.environ['WORLD_SIZE'] = '2'
     # os.environ['LOCAL_RANK'] = '2'
     # os.environ['RANK'] = '0'

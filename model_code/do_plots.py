@@ -109,7 +109,7 @@ def do_plots(config, data_loader_val, model):
             #make a mask where preds[x, 0] is larger than both neighbours
             peak_preds_mask = np.logical_and(preds[:, 0] > np.roll(preds[:, 0], 1), preds[:, 0] > np.roll(preds[:, 0], -1))
             #make a mask out of preds[:, 0] > 0.25
-            preds_mask = np.ma.masked_where(preds[:, 0] >= 0.40, preds[:, 0])
+            preds_mask = np.ma.masked_where(preds[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR, preds[:, 0])
             preds_mask = np.ma.getmask(preds_mask)
 
             #intersect the two masks
@@ -156,7 +156,7 @@ def do_plots(config, data_loader_val, model):
             ax.plot(np.arange(360), preds[:, 0], c='g')
             ax.set_ylim(0, 1)
             #plot horizontal black line at 0.25
-            ax.axhline(y=0.40, color='k', linestyle='--', label='selection threshold')
+            ax.axhline(y=config.CENTERNET.PRED_HEATMAP_THR, color='k', linestyle='--', label='selection threshold')
             ax.set_title('heatmap')
             ax.legend()
             ax.set_xlabel('angle bin')

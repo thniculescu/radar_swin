@@ -259,7 +259,7 @@ def calc_ego_vel(nusc, cur_sample):
     return timestamps, ego_vel_trans
 
 
-def filter_boxes(nusc, anns, max_range=60, vis_level=0, min_radar_pts=1, min_lidar_pts=1, only_vehicle=True, only_moving=False, skip_filter=False):
+def filter_boxes(nusc, anns, max_range=60, vis_level=0, min_radar_pts=1, min_lidar_pts=1, only_vehicle=True, only_moving_targets=False, skip_filter=False):
     if skip_filter:
         return anns
     filtered_anns = []
@@ -274,7 +274,7 @@ def filter_boxes(nusc, anns, max_range=60, vis_level=0, min_radar_pts=1, min_lid
         else:
             ann_att = 'other_obj.static'
 
-        if only_moving and \
+        if only_moving_targets and \
             ann_att != 'vehicle.moving' and \
             ann_att != 'cycle.with_rider' and \
             ann_att != 'pedestrian.moving':
@@ -293,7 +293,7 @@ def filter_boxes(nusc, anns, max_range=60, vis_level=0, min_radar_pts=1, min_lid
     return filtered_anns
 
 
-def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, box_corners, t0, NR_SWEEPS, MAX_RANGE=60):
+def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, box_corners, t0, NR_SWEEPS, MAX_RANGE=60, make_movie=False, scene_name=None):
     fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize=(8, 8))
     #set maxrange 60
     ax.set_title('Sample: ' + str(nr_samps + 1) + ' Time: ' + str((cur_sample['timestamp'] - t0) / 1e6))
@@ -330,6 +330,11 @@ def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, 
         ranges = [r, np.hypot(r, sweep_anns[idx, 6] * r)]
         angles = [th_ang, th_ang + np.arcsin(sweep_anns[idx, 6] * r / ranges[1])]
         ax.plot(angles, ranges, 'k')
+    
+    if make_movie:
+        os.makedirs(f'./plots/{scene_name}', exist_ok=True)
+        plt.savefig(f'./plots/{scene_name}/' + str(nr_samps) + '.png')
+        plt.close()
 
 
 def render_whole_sample(nusc, nr_scene, nr_sample, nr_sweeps=6):
