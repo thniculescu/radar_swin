@@ -95,9 +95,7 @@ def parse_option():
     # CONFIG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radar-swin/configs/radarswin/bbox_vr_6sw_biglast.yaml'
     print("CWDDD:", os.getcwd())
 
-    # CONFIG_PATH = './configs/radarswin/alpha_small.yaml'
-    CONFIG_PATH = './configs/radarswin/alpha_small_static.yaml'
-    # CONFIG_PATH = './configs/radarswin/alpha_small_apOK.yaml'
+    CONFIG_PATH = './configs/alpha_small/only_veh.yaml'
 
     parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
     parser.add_argument('--cfg', type=str, required=False, metavar="FILE", help='path to config file', default=CONFIG_PATH)

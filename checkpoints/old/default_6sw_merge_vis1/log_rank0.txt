@@ -1,0 +1,205 @@
+[2024-07-31 17:11:37 radarswin_tiny] (main.py 411): INFO Full config saved to radarswin_tiny/default/config.json
+[2024-07-31 17:11:37 radarswin_tiny] (main.py 115): INFO Creating model:radarswin/radarswin_tiny
+[2024-07-31 17:11:38 radarswin_tiny] (main.py 123): INFO number of params, M: 0.320876
+[2024-07-31 17:11:38 radarswin_tiny] (main.py 126): INFO number of GFLOPs: 0.23149152100086212
+[2024-07-31 17:11:38 radarswin_tiny] (main.py 182): INFO Start training
+[2024-07-31 17:13:28 radarswin_tiny] (main.py 406): INFO Full config saved to radarswin_tiny/default/config.json
+[2024-07-31 17:13:28 radarswin_tiny] (main.py 411): INFO Full config saved to radarswin_tiny/default/config.json
+[2024-07-31 17:13:29 radarswin_tiny] (main.py 115): INFO Creating model:radarswin/radarswin_tiny
+[2024-07-31 17:13:29 radarswin_tiny] (main.py 123): INFO number of params, M: 0.320876
+[2024-07-31 17:13:29 radarswin_tiny] (main.py 126): INFO number of GFLOPs: 0.23149152100086212
+[2024-07-31 17:13:29 radarswin_tiny] (main.py 182): INFO Start training
+[2024-07-31 17:13:33 radarswin_tiny] (main.py 252): INFO Train: [0/25][0/101]	eta 0:05:33 lr 0.000320	 wd 0.0100	time 3.3013 (3.3013)	loss inf (inf)	grad_norm nan (nan)	loss_scale 32768.0000 (32768.0000)	mem 10762MB
+[2024-07-31 17:13:38 radarswin_tiny] (main.py 252): INFO Train: [0/25][10/101]	eta 0:01:10 lr 0.000463	 wd 0.0100	time 0.5122 (0.7756)	loss inf (inf)	grad_norm 7.3185 (nan)	loss_scale 8192.0000 (11170.9091)	mem 10764MB
+[2024-07-31 17:13:43 radarswin_tiny] (main.py 252): INFO Train: [0/25][20/101]	eta 0:00:52 lr 0.000605	 wd 0.0100	time 0.5128 (0.6500)	loss inf (inf)	grad_norm 2.9965 (nan)	loss_scale 8192.0000 (9752.3810)	mem 10764MB
+[2024-07-31 17:13:48 radarswin_tiny] (main.py 252): INFO Train: [0/25][30/101]	eta 0:00:43 lr 0.000748	 wd 0.0100	time 0.5122 (0.6057)	loss inf (inf)	grad_norm 2.2270 (nan)	loss_scale 8192.0000 (9249.0323)	mem 10764MB
+[2024-07-31 17:13:53 radarswin_tiny] (main.py 252): INFO Train: [0/25][40/101]	eta 0:00:35 lr 0.000890	 wd 0.0100	time 0.5133 (0.5829)	loss 3.2012 (inf)	grad_norm 1.6960 (nan)	loss_scale 8192.0000 (8991.2195)	mem 10764MB
+[2024-07-31 17:13:58 radarswin_tiny] (main.py 252): INFO Train: [0/25][50/101]	eta 0:00:29 lr 0.001033	 wd 0.0100	time 0.5118 (0.5690)	loss 2.5938 (inf)	grad_norm 1.2586 (nan)	loss_scale 8192.0000 (8834.5098)	mem 10764MB
+[2024-07-31 17:14:04 radarswin_tiny] (main.py 252): INFO Train: [0/25][60/101]	eta 0:00:22 lr 0.001175	 wd 0.0100	time 0.5118 (0.5596)	loss 2.4648 (inf)	grad_norm 1.1119 (nan)	loss_scale 8192.0000 (8729.1803)	mem 10764MB
+[2024-07-31 17:14:09 radarswin_tiny] (main.py 252): INFO Train: [0/25][70/101]	eta 0:00:17 lr 0.001318	 wd 0.0100	time 0.5125 (0.5530)	loss 2.4629 (inf)	grad_norm 0.6819 (nan)	loss_scale 8192.0000 (8653.5211)	mem 10764MB
+[2024-07-31 17:14:14 radarswin_tiny] (main.py 252): INFO Train: [0/25][80/101]	eta 0:00:11 lr 0.001461	 wd 0.0100	time 0.5124 (0.5480)	loss 2.4609 (inf)	grad_norm 0.6347 (nan)	loss_scale 8192.0000 (8596.5432)	mem 10764MB
+[2024-07-31 17:14:19 radarswin_tiny] (main.py 252): INFO Train: [0/25][90/101]	eta 0:00:05 lr 0.001603	 wd 0.0100	time 0.5094 (0.5440)	loss 2.4492 (inf)	grad_norm 0.7479 (nan)	loss_scale 8192.0000 (8552.0879)	mem 10764MB
+[2024-07-31 17:14:24 radarswin_tiny] (main.py 252): INFO Train: [0/25][100/101]	eta 0:00:00 lr 0.001746	 wd 0.0100	time 0.5092 (0.5406)	loss 2.4141 (inf)	grad_norm 0.8751 (nan)	loss_scale 8192.0000 (8516.4356)	mem 10764MB
+[2024-07-31 17:14:24 radarswin_tiny] (main.py 261): INFO EPOCH 0 training takes 0:00:54
+[2024-07-31 17:14:24 radarswin_tiny] (utils.py 145): INFO radarswin_tiny/default/ckpt_epoch_0.pth saving......
+[2024-07-31 17:14:24 radarswin_tiny] (utils.py 147): INFO radarswin_tiny/default/ckpt_epoch_0.pth saved !!!
+[2024-07-31 17:14:26 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 1.897 (1.897)	Loss 3.3281 (3.3281)	Mem 10764MB
+[2024-07-31 17:14:28 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.145 (0.344)	Loss 2.4551 (2.5288)	Mem 10764MB
+[2024-07-31 17:14:30 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.145 (0.270)	Loss 2.5215 (2.5086)	Mem 10764MB
+[2024-07-31 17:14:31 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:14:31 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:14:32 radarswin_tiny] (main.py 252): INFO Train: [1/25][0/101]	eta 0:01:43 lr 0.001760	 wd 0.0100	time 1.0247 (1.0247)	loss 2.5059 (2.5059)	grad_norm 0.7438 (0.7438)	loss_scale 8192.0000 (8192.0000)	mem 10764MB
+[2024-07-31 17:14:37 radarswin_tiny] (main.py 252): INFO Train: [1/25][10/101]	eta 0:00:50 lr 0.001903	 wd 0.0100	time 0.5084 (0.5591)	loss 2.9922 (2.5813)	grad_norm inf (inf)	loss_scale 2048.0000 (7261.0909)	mem 10764MB
+[2024-07-31 17:14:43 radarswin_tiny] (main.py 252): INFO Train: [1/25][20/101]	eta 0:00:43 lr 0.002045	 wd 0.0100	time 0.5121 (0.5367)	loss 2.4316 (2.7411)	grad_norm 0.7490 (inf)	loss_scale 512.0000 (4071.6190)	mem 10764MB
+[2024-07-31 17:14:48 radarswin_tiny] (main.py 252): INFO Train: [1/25][30/101]	eta 0:00:37 lr 0.002188	 wd 0.0100	time 0.5141 (0.5291)	loss 2.4570 (2.6576)	grad_norm 0.7198 (inf)	loss_scale 512.0000 (2923.3548)	mem 10764MB
+[2024-07-31 17:14:53 radarswin_tiny] (main.py 252): INFO Train: [1/25][40/101]	eta 0:00:32 lr 0.002330	 wd 0.0100	time 0.5131 (0.5253)	loss 2.4766 (2.6065)	grad_norm 0.9903 (inf)	loss_scale 512.0000 (2335.2195)	mem 10764MB
+[2024-07-31 17:14:58 radarswin_tiny] (main.py 252): INFO Train: [1/25][50/101]	eta 0:00:26 lr 0.002473	 wd 0.0100	time 0.5129 (0.5229)	loss 2.4707 (2.5877)	grad_norm 0.9479 (inf)	loss_scale 512.0000 (1977.7255)	mem 10764MB
+[2024-07-31 17:15:03 radarswin_tiny] (main.py 252): INFO Train: [1/25][60/101]	eta 0:00:21 lr 0.002615	 wd 0.0100	time 0.5129 (0.5214)	loss 2.4258 (2.5636)	grad_norm 0.1422 (inf)	loss_scale 512.0000 (1737.4426)	mem 10764MB
+[2024-07-31 17:15:08 radarswin_tiny] (main.py 252): INFO Train: [1/25][70/101]	eta 0:00:16 lr 0.002758	 wd 0.0100	time 0.5134 (0.5202)	loss 2.4395 (2.5420)	grad_norm 0.6958 (inf)	loss_scale 512.0000 (1564.8451)	mem 10764MB
+[2024-07-31 17:15:13 radarswin_tiny] (main.py 252): INFO Train: [1/25][80/101]	eta 0:00:10 lr 0.002901	 wd 0.0100	time 0.5134 (0.5194)	loss 2.4023 (2.5229)	grad_norm 0.8529 (inf)	loss_scale 512.0000 (1434.8642)	mem 10764MB
+[2024-07-31 17:15:18 radarswin_tiny] (main.py 252): INFO Train: [1/25][90/101]	eta 0:00:05 lr 0.003043	 wd 0.0100	time 0.5099 (0.5187)	loss 2.3750 (2.5058)	grad_norm 1.7207 (inf)	loss_scale 512.0000 (1333.4505)	mem 10764MB
+[2024-07-31 17:15:24 radarswin_tiny] (main.py 252): INFO Train: [1/25][100/101]	eta 0:00:00 lr 0.003186	 wd 0.0100	time 0.5086 (0.5178)	loss 2.3828 (2.4890)	grad_norm 2.6186 (inf)	loss_scale 512.0000 (1252.1188)	mem 10764MB
+[2024-07-31 17:15:24 radarswin_tiny] (main.py 261): INFO EPOCH 1 training takes 0:00:52
+[2024-07-31 17:15:24 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.619 (0.619)	Loss 2.9785 (2.9785)	Mem 10764MB
+[2024-07-31 17:15:26 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.145 (0.189)	Loss 2.3496 (2.3402)	Mem 10764MB
+[2024-07-31 17:15:27 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.146 (0.168)	Loss 2.1992 (2.3035)	Mem 10764MB
+[2024-07-31 17:15:28 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:15:28 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:15:29 radarswin_tiny] (main.py 252): INFO Train: [2/25][0/101]	eta 0:02:00 lr 0.003200	 wd 0.0100	time 1.1954 (1.1954)	loss 2.3555 (2.3555)	grad_norm 0.8592 (0.8592)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:15:34 radarswin_tiny] (main.py 252): INFO Train: [2/25][10/101]	eta 0:00:52 lr 0.003200	 wd 0.0100	time 0.5165 (0.5765)	loss 2.3223 (2.3081)	grad_norm 2.0603 (2.0620)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:15:39 radarswin_tiny] (main.py 252): INFO Train: [2/25][20/101]	eta 0:00:44 lr 0.003199	 wd 0.0100	time 0.5111 (0.5461)	loss 2.3691 (2.3013)	grad_norm 2.0722 (1.9981)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:15:44 radarswin_tiny] (main.py 252): INFO Train: [2/25][30/101]	eta 0:00:37 lr 0.003199	 wd 0.0100	time 0.5117 (0.5349)	loss 2.2656 (2.2793)	grad_norm 0.8671 (1.8259)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:15:49 radarswin_tiny] (main.py 252): INFO Train: [2/25][40/101]	eta 0:00:32 lr 0.003198	 wd 0.0100	time 0.5125 (0.5296)	loss 2.2051 (2.2672)	grad_norm 1.6281 (1.6624)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:15:55 radarswin_tiny] (main.py 252): INFO Train: [2/25][50/101]	eta 0:00:26 lr 0.003197	 wd 0.0100	time 0.5112 (0.5262)	loss 2.1875 (2.2580)	grad_norm 1.2137 (1.5644)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:00 radarswin_tiny] (main.py 252): INFO Train: [2/25][60/101]	eta 0:00:21 lr 0.003195	 wd 0.0100	time 0.5124 (0.5239)	loss 2.2207 (2.2455)	grad_norm 1.1492 (1.5149)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:05 radarswin_tiny] (main.py 252): INFO Train: [2/25][70/101]	eta 0:00:16 lr 0.003194	 wd 0.0100	time 0.5117 (0.5222)	loss 2.2305 (2.2392)	grad_norm 2.1439 (1.5063)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:10 radarswin_tiny] (main.py 252): INFO Train: [2/25][80/101]	eta 0:00:10 lr 0.003192	 wd 0.0100	time 0.5105 (0.5208)	loss 2.1953 (2.2334)	grad_norm 1.0008 (1.5024)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:15 radarswin_tiny] (main.py 252): INFO Train: [2/25][90/101]	eta 0:00:05 lr 0.003189	 wd 0.0100	time 0.5093 (0.5198)	loss 2.1934 (2.2257)	grad_norm 3.7728 (1.5183)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:20 radarswin_tiny] (main.py 252): INFO Train: [2/25][100/101]	eta 0:00:00 lr 0.003187	 wd 0.0100	time 0.5086 (0.5189)	loss 2.1836 (2.2208)	grad_norm 1.3392 (1.5306)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:20 radarswin_tiny] (main.py 261): INFO EPOCH 2 training takes 0:00:52
+[2024-07-31 17:16:21 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.627 (0.627)	Loss 3.1074 (3.1074)	Mem 10764MB
+[2024-07-31 17:16:22 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.145 (0.190)	Loss 2.2109 (2.2994)	Mem 10764MB
+[2024-07-31 17:16:24 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.145 (0.168)	Loss 2.0781 (2.2247)	Mem 10764MB
+[2024-07-31 17:16:24 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:16:24 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:16:25 radarswin_tiny] (main.py 252): INFO Train: [3/25][0/101]	eta 0:01:42 lr 0.003187	 wd 0.0100	time 1.0134 (1.0134)	loss 2.1797 (2.1797)	grad_norm 1.2651 (1.2651)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:31 radarswin_tiny] (main.py 252): INFO Train: [3/25][10/101]	eta 0:00:50 lr 0.003184	 wd 0.0100	time 0.5109 (0.5568)	loss 2.1484 (2.1680)	grad_norm 2.6817 (1.3958)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:36 radarswin_tiny] (main.py 252): INFO Train: [3/25][20/101]	eta 0:00:43 lr 0.003181	 wd 0.0100	time 0.5136 (0.5353)	loss 2.2188 (2.1723)	grad_norm 4.0721 (1.7463)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:41 radarswin_tiny] (main.py 252): INFO Train: [3/25][30/101]	eta 0:00:37 lr 0.003177	 wd 0.0100	time 0.5138 (0.5289)	loss 2.1562 (2.1665)	grad_norm 2.4540 (1.6415)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:46 radarswin_tiny] (main.py 252): INFO Train: [3/25][40/101]	eta 0:00:32 lr 0.003174	 wd 0.0100	time 0.5116 (0.5250)	loss 2.1309 (2.1625)	grad_norm 1.5965 (1.6926)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:51 radarswin_tiny] (main.py 252): INFO Train: [3/25][50/101]	eta 0:00:26 lr 0.003170	 wd 0.0100	time 0.5129 (0.5227)	loss 2.1094 (2.1643)	grad_norm 1.1345 (1.8867)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:16:56 radarswin_tiny] (main.py 252): INFO Train: [3/25][60/101]	eta 0:00:21 lr 0.003166	 wd 0.0100	time 0.5107 (0.5211)	loss 2.1055 (2.1606)	grad_norm 2.3624 (1.8462)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:01 radarswin_tiny] (main.py 252): INFO Train: [3/25][70/101]	eta 0:00:16 lr 0.003162	 wd 0.0100	time 0.5110 (0.5198)	loss 2.1348 (2.1588)	grad_norm 1.2451 (1.9250)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:06 radarswin_tiny] (main.py 252): INFO Train: [3/25][80/101]	eta 0:00:10 lr 0.003157	 wd 0.0100	time 0.5128 (0.5188)	loss 2.0117 (2.1506)	grad_norm 0.8819 (1.8294)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:12 radarswin_tiny] (main.py 252): INFO Train: [3/25][90/101]	eta 0:00:05 lr 0.003152	 wd 0.0100	time 0.5113 (0.5183)	loss 2.0469 (2.1453)	grad_norm 2.2941 (1.9099)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:17 radarswin_tiny] (main.py 252): INFO Train: [3/25][100/101]	eta 0:00:00 lr 0.003147	 wd 0.0100	time 0.5116 (0.5177)	loss 2.0977 (2.1397)	grad_norm 1.5918 (1.8857)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:17 radarswin_tiny] (main.py 261): INFO EPOCH 3 training takes 0:00:52
+[2024-07-31 17:17:17 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.610 (0.610)	Loss 2.9043 (2.9043)	Mem 10764MB
+[2024-07-31 17:17:19 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.145 (0.188)	Loss 2.1777 (2.2093)	Mem 10764MB
+[2024-07-31 17:17:20 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.145 (0.168)	Loss 1.9141 (2.1090)	Mem 10764MB
+[2024-07-31 17:17:21 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:17:21 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:17:22 radarswin_tiny] (main.py 252): INFO Train: [4/25][0/101]	eta 0:01:42 lr 0.003147	 wd 0.0100	time 1.0188 (1.0188)	loss 2.0566 (2.0566)	grad_norm 1.0330 (1.0330)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:27 radarswin_tiny] (main.py 252): INFO Train: [4/25][10/101]	eta 0:00:50 lr 0.003141	 wd 0.0100	time 0.5156 (0.5592)	loss 2.0527 (2.0581)	grad_norm 0.9935 (2.2166)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:32 radarswin_tiny] (main.py 252): INFO Train: [4/25][20/101]	eta 0:00:43 lr 0.003136	 wd 0.0100	time 0.5125 (0.5375)	loss 2.0430 (2.0621)	grad_norm 2.8221 (2.0060)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:37 radarswin_tiny] (main.py 252): INFO Train: [4/25][30/101]	eta 0:00:37 lr 0.003130	 wd 0.0100	time 0.5194 (0.5298)	loss 2.0625 (2.0622)	grad_norm 3.1508 (2.1967)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:43 radarswin_tiny] (main.py 252): INFO Train: [4/25][40/101]	eta 0:00:32 lr 0.003124	 wd 0.0100	time 0.5113 (0.5259)	loss 2.0781 (2.0608)	grad_norm 1.6810 (2.3397)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:48 radarswin_tiny] (main.py 252): INFO Train: [4/25][50/101]	eta 0:00:26 lr 0.003117	 wd 0.0100	time 0.5118 (0.5231)	loss 1.9863 (2.0597)	grad_norm 2.8961 (2.5358)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:53 radarswin_tiny] (main.py 252): INFO Train: [4/25][60/101]	eta 0:00:21 lr 0.003111	 wd 0.0100	time 0.5122 (0.5213)	loss 2.0703 (2.0560)	grad_norm 2.2094 (2.5336)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:17:58 radarswin_tiny] (main.py 252): INFO Train: [4/25][70/101]	eta 0:00:16 lr 0.003104	 wd 0.0100	time 0.5120 (0.5200)	loss 2.0762 (2.0547)	grad_norm 1.4600 (2.6122)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:03 radarswin_tiny] (main.py 252): INFO Train: [4/25][80/101]	eta 0:00:10 lr 0.003097	 wd 0.0100	time 0.5133 (0.5191)	loss 2.0391 (2.0533)	grad_norm 2.2439 (2.6378)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:08 radarswin_tiny] (main.py 252): INFO Train: [4/25][90/101]	eta 0:00:05 lr 0.003089	 wd 0.0100	time 0.5114 (0.5183)	loss 2.0508 (2.0507)	grad_norm 2.8256 (2.6271)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:13 radarswin_tiny] (main.py 252): INFO Train: [4/25][100/101]	eta 0:00:00 lr 0.003082	 wd 0.0100	time 0.5102 (0.5176)	loss 1.9873 (2.0475)	grad_norm 2.8766 (2.5517)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:13 radarswin_tiny] (main.py 261): INFO EPOCH 4 training takes 0:00:52
+[2024-07-31 17:18:14 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.604 (0.604)	Loss 2.5820 (2.5820)	Mem 10764MB
+[2024-07-31 17:18:15 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.145 (0.187)	Loss 2.1426 (2.1335)	Mem 10764MB
+[2024-07-31 17:18:17 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.145 (0.168)	Loss 1.8398 (2.0472)	Mem 10764MB
+[2024-07-31 17:18:17 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:18:17 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:18:19 radarswin_tiny] (main.py 252): INFO Train: [5/25][0/101]	eta 0:02:05 lr 0.003081	 wd 0.0100	time 1.2458 (1.2458)	loss 2.0352 (2.0352)	grad_norm 0.9106 (0.9106)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:24 radarswin_tiny] (main.py 252): INFO Train: [5/25][10/101]	eta 0:00:52 lr 0.003073	 wd 0.0100	time 0.5108 (0.5783)	loss 2.0020 (2.0252)	grad_norm 0.8061 (2.0321)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:29 radarswin_tiny] (main.py 252): INFO Train: [5/25][20/101]	eta 0:00:44 lr 0.003065	 wd 0.0100	time 0.5137 (0.5465)	loss 1.9531 (2.0204)	grad_norm 1.0452 (1.9615)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:34 radarswin_tiny] (main.py 252): INFO Train: [5/25][30/101]	eta 0:00:38 lr 0.003056	 wd 0.0100	time 0.5108 (0.5353)	loss 1.9980 (2.0248)	grad_norm 1.0492 (1.9870)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:39 radarswin_tiny] (main.py 252): INFO Train: [5/25][40/101]	eta 0:00:32 lr 0.003048	 wd 0.0100	time 0.5116 (0.5297)	loss 2.0430 (2.0214)	grad_norm 1.3028 (1.8342)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:44 radarswin_tiny] (main.py 252): INFO Train: [5/25][50/101]	eta 0:00:26 lr 0.003039	 wd 0.0100	time 0.5123 (0.5260)	loss 1.9609 (2.0133)	grad_norm 0.5924 (1.8567)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:49 radarswin_tiny] (main.py 252): INFO Train: [5/25][60/101]	eta 0:00:21 lr 0.003030	 wd 0.0100	time 0.5121 (0.5241)	loss 1.9658 (2.0104)	grad_norm 2.2487 (1.8986)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:18:55 radarswin_tiny] (main.py 252): INFO Train: [5/25][70/101]	eta 0:00:16 lr 0.003021	 wd 0.0100	time 0.5118 (0.5225)	loss 1.9951 (2.0075)	grad_norm 1.3927 (2.0555)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:00 radarswin_tiny] (main.py 252): INFO Train: [5/25][80/101]	eta 0:00:10 lr 0.003011	 wd 0.0100	time 0.5115 (0.5212)	loss 2.0293 (2.0077)	grad_norm 2.9653 (2.1167)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:05 radarswin_tiny] (main.py 252): INFO Train: [5/25][90/101]	eta 0:00:05 lr 0.003001	 wd 0.0100	time 0.5099 (0.5202)	loss 2.0098 (2.0070)	grad_norm 3.1144 (2.1227)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:10 radarswin_tiny] (main.py 252): INFO Train: [5/25][100/101]	eta 0:00:00 lr 0.002991	 wd 0.0100	time 0.5095 (0.5192)	loss 1.9561 (2.0045)	grad_norm 2.2129 (2.1331)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:10 radarswin_tiny] (main.py 261): INFO EPOCH 5 training takes 0:00:52
+[2024-07-31 17:19:10 radarswin_tiny] (utils.py 145): INFO radarswin_tiny/default/ckpt_epoch_5.pth saving......
+[2024-07-31 17:19:10 radarswin_tiny] (utils.py 147): INFO radarswin_tiny/default/ckpt_epoch_5.pth saved !!!
+[2024-07-31 17:19:11 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.611 (0.611)	Loss 2.5059 (2.5059)	Mem 10764MB
+[2024-07-31 17:19:12 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.146 (0.188)	Loss 2.1289 (2.1222)	Mem 10764MB
+[2024-07-31 17:19:14 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.146 (0.168)	Loss 1.8428 (2.0351)	Mem 10764MB
+[2024-07-31 17:19:14 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:19:14 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:19:15 radarswin_tiny] (main.py 252): INFO Train: [6/25][0/101]	eta 0:01:43 lr 0.002990	 wd 0.0100	time 1.0229 (1.0229)	loss 2.0039 (2.0039)	grad_norm 2.3500 (2.3500)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:20 radarswin_tiny] (main.py 252): INFO Train: [6/25][10/101]	eta 0:00:50 lr 0.002980	 wd 0.0100	time 0.5098 (0.5571)	loss 1.9746 (1.9863)	grad_norm 0.9051 (2.3595)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:26 radarswin_tiny] (main.py 252): INFO Train: [6/25][20/101]	eta 0:00:43 lr 0.002970	 wd 0.0100	time 0.5115 (0.5350)	loss 1.9854 (1.9867)	grad_norm 0.7368 (2.1357)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:31 radarswin_tiny] (main.py 252): INFO Train: [6/25][30/101]	eta 0:00:37 lr 0.002959	 wd 0.0100	time 0.5107 (0.5271)	loss 1.9365 (1.9791)	grad_norm 1.5221 (2.0059)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:36 radarswin_tiny] (main.py 252): INFO Train: [6/25][40/101]	eta 0:00:31 lr 0.002948	 wd 0.0100	time 0.5101 (0.5230)	loss 1.9678 (1.9780)	grad_norm 0.8061 (1.8598)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:41 radarswin_tiny] (main.py 252): INFO Train: [6/25][50/101]	eta 0:00:26 lr 0.002937	 wd 0.0100	time 0.5103 (0.5206)	loss 1.9727 (1.9765)	grad_norm 1.6771 (1.8595)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:46 radarswin_tiny] (main.py 252): INFO Train: [6/25][60/101]	eta 0:00:21 lr 0.002926	 wd 0.0100	time 0.5131 (0.5191)	loss 1.9619 (1.9702)	grad_norm 1.7291 (1.8910)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:51 radarswin_tiny] (main.py 252): INFO Train: [6/25][70/101]	eta 0:00:16 lr 0.002914	 wd 0.0100	time 0.5109 (0.5181)	loss 1.9072 (1.9696)	grad_norm 1.5557 (2.0830)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:19:56 radarswin_tiny] (main.py 252): INFO Train: [6/25][80/101]	eta 0:00:10 lr 0.002902	 wd 0.0100	time 0.5111 (0.5174)	loss 1.9043 (1.9678)	grad_norm 1.2651 (2.1281)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:01 radarswin_tiny] (main.py 252): INFO Train: [6/25][90/101]	eta 0:00:05 lr 0.002890	 wd 0.0100	time 0.5117 (0.5170)	loss 1.9902 (1.9646)	grad_norm 0.8091 (2.0579)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:07 radarswin_tiny] (main.py 252): INFO Train: [6/25][100/101]	eta 0:00:00 lr 0.002878	 wd 0.0100	time 0.5114 (0.5164)	loss 1.9111 (1.9628)	grad_norm 1.6952 (2.0147)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:07 radarswin_tiny] (main.py 261): INFO EPOCH 6 training takes 0:00:52
+[2024-07-31 17:20:07 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.618 (0.618)	Loss 2.3438 (2.3438)	Mem 10764MB
+[2024-07-31 17:20:09 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.146 (0.189)	Loss 2.0781 (2.0665)	Mem 10764MB
+[2024-07-31 17:20:10 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.145 (0.168)	Loss 1.7773 (1.9898)	Mem 10764MB
+[2024-07-31 17:20:11 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:20:11 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:20:12 radarswin_tiny] (main.py 252): INFO Train: [7/25][0/101]	eta 0:01:43 lr 0.002877	 wd 0.0100	time 1.0262 (1.0262)	loss 1.9600 (1.9600)	grad_norm 1.1882 (1.1882)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:17 radarswin_tiny] (main.py 252): INFO Train: [7/25][10/101]	eta 0:00:50 lr 0.002865	 wd 0.0100	time 0.5142 (0.5586)	loss 1.9521 (1.9511)	grad_norm 2.3447 (1.8654)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:22 radarswin_tiny] (main.py 252): INFO Train: [7/25][20/101]	eta 0:00:43 lr 0.002852	 wd 0.0100	time 0.5120 (0.5362)	loss 1.8809 (1.9437)	grad_norm 1.9171 (1.9947)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:27 radarswin_tiny] (main.py 252): INFO Train: [7/25][30/101]	eta 0:00:37 lr 0.002839	 wd 0.0100	time 0.5126 (0.5288)	loss 1.9180 (1.9378)	grad_norm 1.4047 (1.9899)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:32 radarswin_tiny] (main.py 252): INFO Train: [7/25][40/101]	eta 0:00:32 lr 0.002826	 wd 0.0100	time 0.5110 (0.5247)	loss 1.8945 (1.9318)	grad_norm 0.8400 (1.8827)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:37 radarswin_tiny] (main.py 252): INFO Train: [7/25][50/101]	eta 0:00:26 lr 0.002813	 wd 0.0100	time 0.5118 (0.5222)	loss 1.8799 (1.9326)	grad_norm 1.5850 (1.8890)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:43 radarswin_tiny] (main.py 252): INFO Train: [7/25][60/101]	eta 0:00:21 lr 0.002800	 wd 0.0100	time 0.5123 (0.5206)	loss 1.9082 (1.9344)	grad_norm 2.0754 (2.0227)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:48 radarswin_tiny] (main.py 252): INFO Train: [7/25][70/101]	eta 0:00:16 lr 0.002786	 wd 0.0100	time 0.5142 (0.5196)	loss 1.8916 (1.9336)	grad_norm 1.2685 (2.0148)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:53 radarswin_tiny] (main.py 252): INFO Train: [7/25][80/101]	eta 0:00:10 lr 0.002772	 wd 0.0100	time 0.5167 (0.5191)	loss 1.9121 (1.9347)	grad_norm 1.1019 (2.0924)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:20:58 radarswin_tiny] (main.py 252): INFO Train: [7/25][90/101]	eta 0:00:05 lr 0.002758	 wd 0.0100	time 0.5113 (0.5186)	loss 1.9473 (1.9361)	grad_norm 1.4236 (2.1557)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:03 radarswin_tiny] (main.py 252): INFO Train: [7/25][100/101]	eta 0:00:00 lr 0.002744	 wd 0.0100	time 0.5120 (0.5179)	loss 1.8916 (1.9343)	grad_norm 1.4302 (2.1427)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:03 radarswin_tiny] (main.py 261): INFO EPOCH 7 training takes 0:00:52
+[2024-07-31 17:21:04 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.634 (0.634)	Loss 2.4297 (2.4297)	Mem 10764MB
+[2024-07-31 17:21:05 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.146 (0.191)	Loss 2.1152 (2.0683)	Mem 10764MB
+[2024-07-31 17:21:07 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.146 (0.169)	Loss 1.7314 (1.9708)	Mem 10764MB
+[2024-07-31 17:21:07 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:21:07 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:21:09 radarswin_tiny] (main.py 252): INFO Train: [8/25][0/101]	eta 0:02:10 lr 0.002743	 wd 0.0100	time 1.2883 (1.2883)	loss 1.9268 (1.9268)	grad_norm 1.7830 (1.7830)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:14 radarswin_tiny] (main.py 252): INFO Train: [8/25][10/101]	eta 0:00:53 lr 0.002729	 wd 0.0100	time 0.5135 (0.5850)	loss 1.8936 (1.9136)	grad_norm 2.5933 (1.9285)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:19 radarswin_tiny] (main.py 252): INFO Train: [8/25][20/101]	eta 0:00:44 lr 0.002714	 wd 0.0100	time 0.5128 (0.5511)	loss 1.9512 (1.9130)	grad_norm 2.5023 (1.8955)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:24 radarswin_tiny] (main.py 252): INFO Train: [8/25][30/101]	eta 0:00:38 lr 0.002699	 wd 0.0100	time 0.5135 (0.5391)	loss 1.9404 (1.9165)	grad_norm 2.3993 (2.0072)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:29 radarswin_tiny] (main.py 252): INFO Train: [8/25][40/101]	eta 0:00:32 lr 0.002685	 wd 0.0100	time 0.5128 (0.5330)	loss 1.9590 (1.9137)	grad_norm 3.2913 (2.0384)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:34 radarswin_tiny] (main.py 252): INFO Train: [8/25][50/101]	eta 0:00:26 lr 0.002670	 wd 0.0100	time 0.5125 (0.5290)	loss 1.9355 (1.9122)	grad_norm 1.9222 (1.9574)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:39 radarswin_tiny] (main.py 252): INFO Train: [8/25][60/101]	eta 0:00:21 lr 0.002654	 wd 0.0100	time 0.5119 (0.5263)	loss 1.9648 (1.9177)	grad_norm 4.0781 (2.1237)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:45 radarswin_tiny] (main.py 252): INFO Train: [8/25][70/101]	eta 0:00:16 lr 0.002639	 wd 0.0100	time 0.5117 (0.5243)	loss 1.9707 (1.9181)	grad_norm 3.3548 (2.1579)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:50 radarswin_tiny] (main.py 252): INFO Train: [8/25][80/101]	eta 0:00:10 lr 0.002623	 wd 0.0100	time 0.5116 (0.5228)	loss 1.9141 (1.9188)	grad_norm 1.7448 (2.1783)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:21:55 radarswin_tiny] (main.py 252): INFO Train: [8/25][90/101]	eta 0:00:05 lr 0.002608	 wd 0.0100	time 0.5098 (0.5216)	loss 1.8896 (1.9185)	grad_norm 1.7110 (2.0921)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:00 radarswin_tiny] (main.py 252): INFO Train: [8/25][100/101]	eta 0:00:00 lr 0.002592	 wd 0.0100	time 0.5097 (0.5205)	loss 1.9482 (1.9200)	grad_norm 2.5928 (2.0590)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:00 radarswin_tiny] (main.py 261): INFO EPOCH 8 training takes 0:00:52
+[2024-07-31 17:22:01 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.601 (0.601)	Loss 2.3125 (2.3125)	Mem 10764MB
+[2024-07-31 17:22:02 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.145 (0.187)	Loss 2.0703 (2.0395)	Mem 10764MB
+[2024-07-31 17:22:03 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.145 (0.167)	Loss 1.7363 (1.9577)	Mem 10764MB
+[2024-07-31 17:22:04 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:22:04 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:22:05 radarswin_tiny] (main.py 252): INFO Train: [9/25][0/101]	eta 0:01:45 lr 0.002590	 wd 0.0100	time 1.0454 (1.0454)	loss 1.9131 (1.9131)	grad_norm 0.9623 (0.9623)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:10 radarswin_tiny] (main.py 252): INFO Train: [9/25][10/101]	eta 0:00:51 lr 0.002574	 wd 0.0100	time 0.5142 (0.5619)	loss 1.8516 (1.9225)	grad_norm 2.7712 (2.3913)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:15 radarswin_tiny] (main.py 252): INFO Train: [9/25][20/101]	eta 0:00:43 lr 0.002558	 wd 0.0100	time 0.5126 (0.5393)	loss 1.9385 (1.9188)	grad_norm 1.4943 (2.0972)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:21 radarswin_tiny] (main.py 252): INFO Train: [9/25][30/101]	eta 0:00:37 lr 0.002542	 wd 0.0100	time 0.5129 (0.5308)	loss 1.8848 (1.9222)	grad_norm 1.6219 (1.9975)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:26 radarswin_tiny] (main.py 252): INFO Train: [9/25][40/101]	eta 0:00:32 lr 0.002526	 wd 0.0100	time 0.5121 (0.5262)	loss 1.9082 (1.9197)	grad_norm 2.8751 (2.0988)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:31 radarswin_tiny] (main.py 252): INFO Train: [9/25][50/101]	eta 0:00:26 lr 0.002509	 wd 0.0100	time 0.5117 (0.5234)	loss 1.8867 (1.9192)	grad_norm 0.5596 (1.9608)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:36 radarswin_tiny] (main.py 252): INFO Train: [9/25][60/101]	eta 0:00:21 lr 0.002492	 wd 0.0100	time 0.5123 (0.5216)	loss 1.9189 (1.9150)	grad_norm 2.4371 (1.9356)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:41 radarswin_tiny] (main.py 252): INFO Train: [9/25][70/101]	eta 0:00:16 lr 0.002475	 wd 0.0100	time 0.5121 (0.5203)	loss 1.9658 (1.9134)	grad_norm 0.7536 (1.9837)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:46 radarswin_tiny] (main.py 252): INFO Train: [9/25][80/101]	eta 0:00:10 lr 0.002459	 wd 0.0100	time 0.5126 (0.5193)	loss 1.8594 (1.9102)	grad_norm 2.1046 (2.0052)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:51 radarswin_tiny] (main.py 252): INFO Train: [9/25][90/101]	eta 0:00:05 lr 0.002441	 wd 0.0100	time 0.5111 (0.5187)	loss 1.8936 (1.9102)	grad_norm 2.2163 (2.0046)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:56 radarswin_tiny] (main.py 252): INFO Train: [9/25][100/101]	eta 0:00:00 lr 0.002424	 wd 0.0100	time 0.5110 (0.5179)	loss 1.8682 (1.9098)	grad_norm 2.6129 (2.0408)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:22:57 radarswin_tiny] (main.py 261): INFO EPOCH 9 training takes 0:00:52
+[2024-07-31 17:22:57 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.632 (0.632)	Loss 2.4258 (2.4258)	Mem 10764MB
+[2024-07-31 17:22:59 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.146 (0.190)	Loss 2.0625 (2.0392)	Mem 10764MB
+[2024-07-31 17:23:00 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.145 (0.169)	Loss 1.7012 (1.9425)	Mem 10764MB
+[2024-07-31 17:23:01 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:23:01 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:23:02 radarswin_tiny] (main.py 252): INFO Train: [10/25][0/101]	eta 0:01:47 lr 0.002422	 wd 0.0100	time 1.0647 (1.0647)	loss 1.8906 (1.8906)	grad_norm 0.9485 (0.9485)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:07 radarswin_tiny] (main.py 252): INFO Train: [10/25][10/101]	eta 0:00:51 lr 0.002405	 wd 0.0100	time 0.5120 (0.5630)	loss 1.8672 (1.8956)	grad_norm 1.5673 (1.7612)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:12 radarswin_tiny] (main.py 252): INFO Train: [10/25][20/101]	eta 0:00:43 lr 0.002388	 wd 0.0100	time 0.5135 (0.5389)	loss 1.9121 (1.8940)	grad_norm 3.0723 (2.1016)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:17 radarswin_tiny] (main.py 252): INFO Train: [10/25][30/101]	eta 0:00:37 lr 0.002370	 wd 0.0100	time 0.5127 (0.5304)	loss 1.9326 (1.8960)	grad_norm 1.0842 (2.1533)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:22 radarswin_tiny] (main.py 252): INFO Train: [10/25][40/101]	eta 0:00:32 lr 0.002352	 wd 0.0100	time 0.5116 (0.5260)	loss 1.8701 (1.8932)	grad_norm 0.8168 (2.0919)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:27 radarswin_tiny] (main.py 252): INFO Train: [10/25][50/101]	eta 0:00:26 lr 0.002335	 wd 0.0100	time 0.5116 (0.5232)	loss 1.9277 (1.8951)	grad_norm 2.6947 (1.9471)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:33 radarswin_tiny] (main.py 252): INFO Train: [10/25][60/101]	eta 0:00:21 lr 0.002317	 wd 0.0100	time 0.5134 (0.5215)	loss 1.9199 (1.8962)	grad_norm 4.3489 (2.0114)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:38 radarswin_tiny] (main.py 252): INFO Train: [10/25][70/101]	eta 0:00:16 lr 0.002299	 wd 0.0100	time 0.5120 (0.5201)	loss 1.9541 (1.8991)	grad_norm 3.3586 (2.0585)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:43 radarswin_tiny] (main.py 252): INFO Train: [10/25][80/101]	eta 0:00:10 lr 0.002281	 wd 0.0100	time 0.5116 (0.5191)	loss 1.8428 (1.8987)	grad_norm 2.2234 (2.0498)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:48 radarswin_tiny] (main.py 252): INFO Train: [10/25][90/101]	eta 0:00:05 lr 0.002262	 wd 0.0100	time 0.5106 (0.5183)	loss 1.8896 (1.8985)	grad_norm 2.7694 (2.1202)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:53 radarswin_tiny] (main.py 252): INFO Train: [10/25][100/101]	eta 0:00:00 lr 0.002244	 wd 0.0100	time 0.5105 (0.5175)	loss 1.9395 (1.8978)	grad_norm 0.9543 (2.0650)	loss_scale 512.0000 (512.0000)	mem 10764MB
+[2024-07-31 17:23:53 radarswin_tiny] (main.py 261): INFO EPOCH 10 training takes 0:00:52
+[2024-07-31 17:23:53 radarswin_tiny] (utils.py 145): INFO radarswin_tiny/default/ckpt_epoch_10.pth saving......
+[2024-07-31 17:23:53 radarswin_tiny] (utils.py 147): INFO radarswin_tiny/default/ckpt_epoch_10.pth saved !!!
+[2024-07-31 17:23:54 radarswin_tiny] (main.py 301): INFO Test: [0/26]	Time 0.609 (0.609)	Loss 2.2520 (2.2520)	Mem 10764MB
+[2024-07-31 17:23:56 radarswin_tiny] (main.py 301): INFO Test: [10/26]	Time 0.145 (0.188)	Loss 2.0703 (2.0265)	Mem 10764MB
+[2024-07-31 17:23:57 radarswin_tiny] (main.py 301): INFO Test: [20/26]	Time 0.145 (0.168)	Loss 1.7295 (1.9443)	Mem 10764MB
+[2024-07-31 17:23:58 radarswin_tiny] (main.py 194): INFO Accuracy of the network on the 6494 test images: 44.0%
+[2024-07-31 17:23:58 radarswin_tiny] (main.py 196): INFO Max accuracy: 44.00%
+[2024-07-31 17:23:59 radarswin_tiny] (main.py 252): INFO Train: [11/25][0/101]	eta 0:01:41 lr 0.002242	 wd 0.0100	time 1.0054 (1.0054)	loss 1.9092 (1.9092)	grad_norm 1.8008 (1.8008)	loss_scale 512.0000 (512.0000)	mem 10764MB

@@ -61,12 +61,13 @@ def plot_bboxes(ax, anns, ground_truth):
     for x in range(car_range.shape[0]):
         if ground_truth is False:
             color = 'k'
-        ax.arrow(init_anns[x, -1], car_range[x], 0, car_range[x] * init_anns[x, 6], lw=4, fc=color, ec=color, head_width=0, head_length=0)
+
+        ax.arrow(init_anns[x, -1], car_range[x], 0, car_range[x] * init_anns[x, 6], lw=4, fc=color, ec=color, head_width=0, head_length=0, alpha=0.5)
         
         if ground_truth is True:
             ranges = [car_range[x], np.hypot(car_range[x], init_anns[x, 7] * car_range[x])]
             angles = [init_anns[x, -1], init_anns[x, -1] + np.arcsin(init_anns[x, 7] * car_range[x] / ranges[1])]       
-            ax.arrow(angles[0], ranges[0], angles[1] - angles[0], ranges[1] - ranges[0], lw=4, fc=color, ec=color, head_width=0, head_length=0)
+            ax.arrow(angles[0], ranges[0], angles[1] - angles[0], ranges[1] - ranges[0], lw=4, fc=color, ec=color, head_width=0, head_length=0, alpha=0.5)
 
 
 
