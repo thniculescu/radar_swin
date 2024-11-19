@@ -1,3 +1,4 @@
+import time
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -8,7 +9,7 @@ def legend_without_duplicate_labels(ax):
     ax.legend(*zip(*unique))
 
 
-def plot_bboxes(ax, anns, ground_truth):
+def plot_bboxes(ax, anns, ground_truth, tracking = False):
     if ground_truth is True:
         color = 'r'
         line_label = 'target'
@@ -64,7 +65,7 @@ def plot_bboxes(ax, anns, ground_truth):
 
         ax.arrow(init_anns[x, -1], car_range[x], 0, car_range[x] * init_anns[x, 6], lw=4, fc=color, ec=color, head_width=0, head_length=0, alpha=0.5)
         
-        if ground_truth is True:
+        if ground_truth is True or tracking is True:
             ranges = [car_range[x], np.hypot(car_range[x], init_anns[x, 7] * car_range[x])]
             angles = [init_anns[x, -1], init_anns[x, -1] + np.arcsin(init_anns[x, 7] * car_range[x] / ranges[1])]       
             ax.arrow(angles[0], ranges[0], angles[1] - angles[0], ranges[1] - ranges[0], lw=4, fc=color, ec=color, head_width=0, head_length=0, alpha=0.5)
@@ -72,13 +73,88 @@ def plot_bboxes(ax, anns, ground_truth):
 
 
 
-
 def do_plots(config, data_loader_val, model):
+    start_time = time.time()
+    gigel = np.empty((0, 8))
+    model.cuda()
+    model.eval()
+    keep_next = None
+
+    final_preds = None
+
+    for batch_nr, (samples, target, test_case) in enumerate(data_loader_val):
+        test_case = [(test_case[0][i], int(test_case[1][i])) for i in range(len(test_case[0]))]
+
+        if final_preds is None:
+            final_preds = {}
+            for x in test_case:
+                #initial empty list for prediction at sweep 0
+                final_preds[x[0]] = {"preds": [np.empty((0, 9))], "input_hmap": [[]]}
+                
+
+        if keep_next is not None:
+            samples = torch.vstack((keep_next[0], samples))
+            target = torch.vstack((keep_next[1], target))
+            test_case = keep_next[2] + test_case
+            keep_next = None    
+        
+        sweep_nrs = np.array([x[1] for x in test_case])
+        if np.unique(sweep_nrs).shape[0] != 1:
+            assert (np.unique(sweep_nrs).shape[0] == 2)
+            #some sweeps have a higher number than the previous one
+            #keep the higher sweeps for next sample
+            next_sweep_id = np.max(sweep_nrs)
+            #how many samples have the next_sweep_id
+            next_sweep_id_count = np.sum(sweep_nrs == next_sweep_id)
+            keep_next = (samples[-next_sweep_id_count:], target[-next_sweep_id_count:], test_case[-next_sweep_id_count:])
+            samples = samples[:-next_sweep_id_count]
+            target = target[:-next_sweep_id_count]
+            test_case = test_case[:-next_sweep_id_count]
+
+            
+        with torch.amp.autocast('cuda', enabled=config.AMP_ENABLE):
+            with torch.no_grad():
+                outputs = model(samples)
+
+        outputs = outputs.cpu().numpy()
+        print(samples.shape)
+        for idx, x in enumerate(outputs):
+            #mask x where it's bigger than both neighbours
+            peak_preds_mask = np.logical_and(x[:, 0] > np.roll(x[:, 0], 1), x[:, 0] > np.roll(x[:, 0], -1))
+            #mask x where x[:, 0] is smaller than 0.25
+            preds_mask = np.ma.masked_where(x[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR, x[:, 0])
+            preds_mask = np.ma.getmask(preds_mask)
+            #intersect the two masks
+            preds_mask = np.logical_and(preds_mask, peak_preds_mask)
+            #keep only unmasked lines of x
+            #select indices where preds_mask is False
+            x = np.hstack((x, np.linspace(0, 2 * np.pi, config.DATA.INPUT_SIZE[1]).reshape(-1, 1)))
+            x[:, 2] = np.arcsin(x[:, 2])
+            x = x[preds_mask]
+            #range, angle, orientation, size [w l], velocity [vr vt]
+            x = x[:, [1, -1, 2, 4, 5, 6, 7, 0]]
+            # print("x shape: ", x.shape)
+            final_preds[test_case[idx][0]]["preds"].append(np.array(x))
+            final_preds[test_case[idx][0]]["input_hmap"].append(samples[idx].cpu().numpy()[3, 0, :])
+
+            
+        print("batch: ", batch_nr, "len: ", outputs.shape[0])
+    
+    np.save('./predictions.npy', final_preds, allow_pickle=True)
+    print("time elapsed: ", time.time() - start_time)
+
+
+def do_plots2(config, data_loader_val, model):
     model.cuda()
 
     # take a sample from the validation set
     total = 0
-    for i, (samples, target) in enumerate(data_loader_val):
+    for i, (samples, target, test_case) in enumerate(data_loader_val):
+        if i > 0:
+            break
+
+        test_case = [(test_case[0][i], int(test_case[1][i])) for i in range(len(test_case[0]))]
+
         print("validation samples shape: ", samples.shape)
         # total += samples.shape[0]
         # print("total samples: ", total)
@@ -90,12 +166,18 @@ def do_plots(config, data_loader_val, model):
         # pred      : B, 360, 8     : hmap, range, orientation [sin, cos], size [w l], velocity [vr vt]
         # target    : B, 360, 8 + 1 : hmap, range, orientation [sin, cos], size [w l], velocity [vr vt], mask
         # for j in range(38, 42):
-        for j in np.random.randint(15, 80, 8):
+        # for j in np.random.randint(15, 80, 8):
+        # for j in np.random.randint(0, 127, 5):
+        # for j in np.random.randint(14, 79, 8):
+        for j in range(0, 5):
             sweeps = samples[j]
             sweeps = sweeps.cpu().numpy().transpose(1, 2, 0)
 
             anns = target[j]
             anns = anns.cpu().numpy()
+
+            # if not np.any(anns[:, 7] > 1):
+            #     continue
 
             mask = anns[:, -1]
 
@@ -109,6 +191,10 @@ def do_plots(config, data_loader_val, model):
             preds = preds.cpu().detach().numpy()
             #make a mask where preds[x, 0] is larger than both neighbours
             peak_preds_mask = np.logical_and(preds[:, 0] > np.roll(preds[:, 0], 1), preds[:, 0] > np.roll(preds[:, 0], -1))
+            
+            #RESET MASK
+            # peak_preds_mask = np.full_like(peak_preds_mask, True)
+            
             #make a mask out of preds[:, 0] > 0.25
             preds_mask = np.ma.masked_where(preds[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR, preds[:, 0])
             preds_mask = np.ma.getmask(preds_mask)
@@ -126,17 +212,21 @@ def do_plots(config, data_loader_val, model):
 
 
             fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize=(12, 12))
+            colors = ['#00FF00', '#00D815', '#00B13C', '#008A63', '#00638A', '#003CB1', '#0015D8', '#0000FF'][::-1]
+
             for idx in range(sweeps.shape[0]):
-                ax.scatter(np.radians(np.arange(360)), sweeps[idx, :, 0], marker='o', c='b', s=5, label='radar_sweeps')
+                ax.scatter(np.radians(np.arange(360)), sweeps[idx, :, 0],
+                        marker='o', s=7, c=colors[idx], 
+                   alpha=1 - 0.9 * idx / sweeps.shape[0], label='radar_sweeps')
 
             # ax.scatter(np.radians(np.arange(360)), anns[:, 1], marker='x', c='r', s=60)
             ax.set_ylim(0, 50)
 
 
-            plot_bboxes(ax, preds, ground_truth=False)
+            plot_bboxes(ax, preds, ground_truth=False, tracking=config.MODEL.TRACKING)
 
-            plot_bboxes(ax, anns, ground_truth=True)
-
+            plot_bboxes(ax, anns, ground_truth=True, tracking=config.MODEL.TRACKING)
+            ax.set_title(f'Scene: {test_case[j][0]}, Sweep: {test_case[j][1]}')
             
 
             #plot predictions + pred_Vr
@@ -198,7 +288,5 @@ def do_plots(config, data_loader_val, model):
             # ax.set_xlabel('angle bin')
             # ax.set_ylabel('Vt / predicted range to target')
 
-        if i == 1:
-            break
-
+        
     pass

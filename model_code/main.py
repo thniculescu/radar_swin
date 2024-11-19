@@ -32,7 +32,7 @@ from utils import load_checkpoint, load_pretrained, save_checkpoint, NativeScale
 from losses import RadarSwinLoss
 import torchinfo
 from metrics import calc_ap, get_tp_fp_conf
-from do_plots import do_plots
+from do_plots import do_plots, do_plots2
 
 # pytorch major version (1.x or 2.x)
 PYTORCH_MAJOR_VERSION = int(torch.__version__.split('.')[0])
@@ -89,13 +89,17 @@ PYTORCH_MAJOR_VERSION = int(torch.__version__.split('.')[0])
 
 #     config = get_config(args)
 
+
 #     return args, config
 
 def parse_option():
-    # CONFIG_PATH = '/imec/other/dl4ms/nicule52/work/radarswin/radar-swin/configs/radarswin/bbox_vr_6sw_biglast.yaml'
-    print("CWDDD:", os.getcwd())
+    # print("CWDDD:", os.getcwd())
 
-    CONFIG_PATH = './configs/alpha_small/only_veh.yaml'
+    # CONFIG_PATH = './configs/alpha_small/only_veh.yaml'
+    CONFIG_PATH = './configs/alpha_small/all_targets.yaml'
+    # CONFIG_PATH = './configs/alpha_small/no_static_only_veh.yaml'
+    # CONFIG_PATH = './configs/alpha_small/all_targets_no_filt.yaml'
+    # CONFIG_PATH = './configs/alpha_small/all_targets_no_filt_tr.yaml'
 
     parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
     parser.add_argument('--cfg', type=str, required=False, metavar="FILE", help='path to config file', default=CONFIG_PATH)
@@ -114,6 +118,11 @@ def parse_option():
 
 def main(config, logger):
     dataset_train, dataset_val, data_loader_train, data_loader_val, mixup_fn = build_loader(config)
+    
+    if config.MODEL.TRACKING:
+        config.defrost()
+        config.MODEL.RADARSWIN.IN_CHANS += 1
+        config.freeze()
 
     logger.info(f"Creating model:{config.MODEL.TYPE}/{config.MODEL.NAME}")
     model = build_model(config)
@@ -165,8 +174,8 @@ def main(config, logger):
 
     if config.MODEL.RESUME:
         max_accuracy = load_checkpoint(config, model_without_ddp, optimizer, lr_scheduler, loss_scaler, logger)
-        acc1, acc5, loss = validate(config, data_loader_val, model, logger)
-        logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {acc1:.1f}%")
+        APs, tot_loss = validate(config, data_loader_val, model, logger)
+        logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
         if config.EVAL_MODE:
             return
 
@@ -175,13 +184,18 @@ def main(config, logger):
         #     config.defrost()
         #     config.MODEL.PRETRAINED = f'./radarswin_tiny/alpha_small/ckpt_epoch_{chk_nr}.pth'
         #     config.freeze()
+        if config.EVAL_MODE:
+            logger.disabled = True
 
         load_pretrained(config, model_without_ddp, logger)
-        acc1, acc5, loss = validate(config, data_loader_val, model, logger)
-        logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {acc1:.1f}%")
+        # APs, tot_loss = validate(config, data_loader_val, model, logger)
+        # logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
+        # print(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
+
+        logger.disabled = False
 
         if config.EVAL_MODE:
-            do_plots(config, data_loader_val, model)
+            do_plots2(config, data_loader_val, model)
 
         return
 
@@ -200,10 +214,10 @@ def main(config, logger):
             save_checkpoint(config, epoch, model_without_ddp, max_accuracy, optimizer, lr_scheduler, loss_scaler,
                             logger)
 
-        acc1, acc5, loss = validate(config, data_loader_val, model, logger)
-        logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {acc1:.1f}%")
-        max_accuracy = max(max_accuracy, acc1)
-        logger.info(f'Max accuracy: {max_accuracy:.2f}%')
+        APs, tot_loss = validate(config, data_loader_val, model, logger)
+        logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
+        # max_accuracy = max(max_accuracy, acc1)
+        # logger.info(f'Max accuracy: {max_accuracy:.2f}%')
 
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
@@ -222,7 +236,7 @@ def train_one_epoch(config, model, criterion, data_loader, optimizer, epoch, mix
 
     start = time.time()
     end = time.time()
-    for idx, (samples, targets) in enumerate(data_loader):
+    for idx, (samples, targets, _) in enumerate(data_loader):
         samples = samples.cuda(non_blocking=True)
         targets = targets.cuda(non_blocking=True)
 
@@ -285,7 +299,7 @@ def validate(config, data_loader, model, logger):
     total_gt = 0
 
     end = time.time()
-    for idx, (images, target) in enumerate(data_loader):
+    for idx, (images, target, _) in enumerate(data_loader):
         images = images.cuda(non_blocking=True)
         target = target.cuda(non_blocking=True)
 
@@ -324,7 +338,7 @@ def validate(config, data_loader, model, logger):
     logger.info(f'AP {np.sum(aps) / len(aps):.3f} ({aps})\t')
     # logger.info(f' * Acc@1 {detA2_meter.avg:.3f} Acc@5 {AP_meter.avg:.3f}')
     # return detA2_meter.avg, AP_meter.avg, loss_meter.avg
-    return 44, AP_meter.avg, loss_meter.avg
+    return aps, loss_meter.avg
 
 
 @torch.no_grad()
@@ -442,7 +456,7 @@ if __name__ == '__main__':
     # torch.cuda.set_device(2)
 
     os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '29502'
+    os.environ['MASTER_PORT'] = '29501'
     # os.environ['WORLD_SIZE'] = '2'
     # os.environ['LOCAL_RANK'] = '2'
     # os.environ['RANK'] = '0'

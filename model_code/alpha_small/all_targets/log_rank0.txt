@@ -1,0 +1,272 @@
+[2024-11-19 00:05:22 alpha_small] (<ipython-input-1-d6880c0eb25a> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:05:22 alpha_small] (<ipython-input-1-d6880c0eb25a> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:05:35 alpha_small] (<ipython-input-1-d6880c0eb25a> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 00:05:41 alpha_small] (<ipython-input-1-d6880c0eb25a> 129): INFO number of params, M: 0.2915
+[2024-11-19 00:05:41 alpha_small] (<ipython-input-1-d6880c0eb25a> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 00:16:59 alpha_small] (<ipython-input-1-d6880c0eb25a> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:16:59 alpha_small] (<ipython-input-1-d6880c0eb25a> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:17:05 alpha_small] (<ipython-input-1-d6880c0eb25a> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 00:17:07 alpha_small] (<ipython-input-1-d6880c0eb25a> 129): INFO number of params, M: 0.2915
+[2024-11-19 00:17:07 alpha_small] (<ipython-input-1-d6880c0eb25a> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 00:18:37 alpha_small] (<ipython-input-1-d6880c0eb25a> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:18:37 alpha_small] (<ipython-input-1-d6880c0eb25a> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:18:42 alpha_small] (<ipython-input-1-d6880c0eb25a> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 00:18:45 alpha_small] (<ipython-input-1-d6880c0eb25a> 129): INFO number of params, M: 0.2915
+[2024-11-19 00:18:45 alpha_small] (<ipython-input-1-d6880c0eb25a> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 00:19:41 alpha_small] (<ipython-input-1-d6880c0eb25a> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:19:41 alpha_small] (<ipython-input-1-d6880c0eb25a> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:19:49 alpha_small] (<ipython-input-1-d6880c0eb25a> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 00:19:57 alpha_small] (<ipython-input-1-d6880c0eb25a> 129): INFO number of params, M: 0.2915
+[2024-11-19 00:19:57 alpha_small] (<ipython-input-1-d6880c0eb25a> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 00:33:45 alpha_small] (<ipython-input-1-d6880c0eb25a> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:33:46 alpha_small] (<ipython-input-1-d6880c0eb25a> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 00:33:51 alpha_small] (<ipython-input-1-d6880c0eb25a> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 00:33:53 alpha_small] (<ipython-input-1-d6880c0eb25a> 129): INFO number of params, M: 0.2915
+[2024-11-19 00:33:53 alpha_small] (<ipython-input-1-d6880c0eb25a> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 03:25:08 alpha_small] (<ipython-input-1-d6880c0eb25a> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:25:08 alpha_small] (<ipython-input-1-d6880c0eb25a> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:25:22 alpha_small] (<ipython-input-1-d6880c0eb25a> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 03:25:59 alpha_small] (<ipython-input-1-d6880c0eb25a> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:25:59 alpha_small] (<ipython-input-1-d6880c0eb25a> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:26:04 alpha_small] (<ipython-input-1-d6880c0eb25a> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 03:27:17 alpha_small] (<ipython-input-1-d6880c0eb25a> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:27:17 alpha_small] (<ipython-input-1-d6880c0eb25a> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:27:21 alpha_small] (<ipython-input-1-d6880c0eb25a> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 03:27:23 alpha_small] (<ipython-input-1-d6880c0eb25a> 129): INFO number of params, M: 0.2915
+[2024-11-19 03:27:23 alpha_small] (<ipython-input-1-d6880c0eb25a> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 03:29:04 alpha_small] (<ipython-input-1-be5e4ac79563> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:29:04 alpha_small] (<ipython-input-1-be5e4ac79563> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:29:08 alpha_small] (<ipython-input-1-be5e4ac79563> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 03:29:10 alpha_small] (<ipython-input-1-be5e4ac79563> 129): INFO number of params, M: 0.2915
+[2024-11-19 03:29:10 alpha_small] (<ipython-input-1-be5e4ac79563> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 03:30:17 alpha_small] (<ipython-input-1-be5e4ac79563> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:30:17 alpha_small] (<ipython-input-1-be5e4ac79563> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:30:22 alpha_small] (<ipython-input-1-be5e4ac79563> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 03:30:25 alpha_small] (<ipython-input-1-be5e4ac79563> 129): INFO number of params, M: 0.2915
+[2024-11-19 03:30:25 alpha_small] (<ipython-input-1-be5e4ac79563> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 03:33:58 alpha_small] (<ipython-input-1-be5e4ac79563> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:33:58 alpha_small] (<ipython-input-1-be5e4ac79563> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:34:17 alpha_small] (<ipython-input-1-be5e4ac79563> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:34:17 alpha_small] (<ipython-input-1-be5e4ac79563> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:34:21 alpha_small] (<ipython-input-1-be5e4ac79563> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 03:34:24 alpha_small] (<ipython-input-1-be5e4ac79563> 129): INFO number of params, M: 0.2915
+[2024-11-19 03:34:24 alpha_small] (<ipython-input-1-be5e4ac79563> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 03:37:22 alpha_small] (<ipython-input-1-be5e4ac79563> 430): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:37:22 alpha_small] (<ipython-input-1-be5e4ac79563> 435): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:37:27 alpha_small] (<ipython-input-1-be5e4ac79563> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 03:37:29 alpha_small] (<ipython-input-1-be5e4ac79563> 129): INFO number of params, M: 0.2915
+[2024-11-19 03:37:29 alpha_small] (<ipython-input-1-be5e4ac79563> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 03:48:52 alpha_small] (1206316158.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:48:52 alpha_small] (1206316158.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:48:56 alpha_small] (1206316158.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 03:48:58 alpha_small] (1206316158.py 129): INFO number of params, M: 0.2915
+[2024-11-19 03:48:58 alpha_small] (1206316158.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 03:50:51 alpha_small] (<ipython-input-1-c787922f52d0> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:50:51 alpha_small] (<ipython-input-1-c787922f52d0> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 03:50:57 alpha_small] (<ipython-input-1-c787922f52d0> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 03:50:59 alpha_small] (<ipython-input-1-c787922f52d0> 129): INFO number of params, M: 0.2915
+[2024-11-19 03:50:59 alpha_small] (<ipython-input-1-c787922f52d0> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:16:28 alpha_small] (3695460525.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:16:28 alpha_small] (3695460525.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:16:34 alpha_small] (3695460525.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:16:36 alpha_small] (3695460525.py 129): INFO number of params, M: 0.2915
+[2024-11-19 04:16:36 alpha_small] (3695460525.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:18:00 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:18:00 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:18:05 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:18:08 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:18:08 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:22:28 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:22:28 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:22:33 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:22:35 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 04:22:35 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:23:02 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:23:02 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:23:11 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:23:14 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 04:23:14 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:23:26 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:23:26 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:23:30 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:23:32 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:23:32 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:24:24 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:24:24 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:24:29 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:24:32 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 04:24:32 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:28:52 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:28:52 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:28:56 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:29:02 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:29:02 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:30:28 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:30:28 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:30:32 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:30:36 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:30:36 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:31:36 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:31:36 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:31:40 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:31:44 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:31:44 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:33:29 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:33:29 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:33:36 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:33:41 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:33:41 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:37:40 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:37:40 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:37:45 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:37:48 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 04:37:48 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:38:56 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:38:56 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:39:00 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:39:04 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 04:39:04 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:39:44 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:39:44 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:39:49 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:39:52 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 04:39:52 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:41:33 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:41:33 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:41:42 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:41:45 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 04:41:45 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:51:58 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:51:58 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:52:02 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:52:07 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:52:07 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:53:18 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:53:18 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:53:22 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:53:27 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:53:27 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:55:43 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:55:43 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:55:47 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:55:51 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:55:51 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 04:57:52 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:57:52 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 04:57:56 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 04:58:00 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 04:58:00 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 05:13:06 alpha_small] (main.py 437): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 05:13:06 alpha_small] (main.py 442): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 05:13:13 alpha_small] (main.py 127): INFO Creating model:radarswin/alpha_small
+[2024-11-19 05:13:18 alpha_small] (main.py 135): INFO number of params, M: 0.2915
+[2024-11-19 05:13:18 alpha_small] (main.py 138): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 05:17:46 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 05:17:46 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 05:17:53 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 05:17:59 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 05:17:59 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 05:19:22 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 05:19:22 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 05:19:27 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 05:19:30 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 05:19:30 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 07:29:34 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:29:34 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:29:46 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 07:29:55 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 07:29:55 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 07:30:38 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:30:38 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:30:45 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 07:30:50 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 07:30:50 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 07:33:39 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:33:39 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:33:44 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 07:33:47 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 07:33:47 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 07:34:31 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:34:31 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:34:38 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 07:34:44 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 07:34:44 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 07:41:20 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:41:20 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:41:25 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 07:41:29 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 07:41:29 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 07:43:09 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:43:09 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 07:43:13 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 07:43:17 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 07:43:17 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 08:10:45 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:10:45 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:10:50 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 08:10:53 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 08:10:53 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 08:12:48 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:12:48 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:13:05 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:13:05 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:13:12 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 08:13:17 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 08:13:17 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 08:17:57 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:17:57 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:18:02 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 08:18:05 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 08:18:05 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 08:20:42 alpha_small] (998221236.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:20:42 alpha_small] (998221236.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:20:46 alpha_small] (998221236.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 08:20:50 alpha_small] (998221236.py 129): INFO number of params, M: 0.2915
+[2024-11-19 08:20:50 alpha_small] (998221236.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 08:27:59 alpha_small] (<ipython-input-1-af6950bacaa1> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:27:59 alpha_small] (<ipython-input-1-af6950bacaa1> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:28:03 alpha_small] (<ipython-input-1-af6950bacaa1> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 08:28:08 alpha_small] (<ipython-input-1-af6950bacaa1> 129): INFO number of params, M: 0.2915
+[2024-11-19 08:28:08 alpha_small] (<ipython-input-1-af6950bacaa1> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 08:28:39 alpha_small] (<ipython-input-1-4f973533949e> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:28:39 alpha_small] (<ipython-input-1-4f973533949e> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:28:43 alpha_small] (<ipython-input-1-4f973533949e> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 08:28:47 alpha_small] (<ipython-input-1-4f973533949e> 129): INFO number of params, M: 0.2915
+[2024-11-19 08:28:47 alpha_small] (<ipython-input-1-4f973533949e> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 08:30:36 alpha_small] (2350976945.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:30:36 alpha_small] (2350976945.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:30:45 alpha_small] (2350976945.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 08:30:48 alpha_small] (2350976945.py 129): INFO number of params, M: 0.2915
+[2024-11-19 08:30:48 alpha_small] (2350976945.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 08:32:56 alpha_small] (2350976945.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:32:56 alpha_small] (2350976945.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:33:00 alpha_small] (2350976945.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 08:33:08 alpha_small] (2350976945.py 129): INFO number of params, M: 0.2915
+[2024-11-19 08:33:08 alpha_small] (2350976945.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 08:34:28 alpha_small] (2350976945.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:34:28 alpha_small] (2350976945.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 08:34:33 alpha_small] (2350976945.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 08:34:37 alpha_small] (2350976945.py 129): INFO number of params, M: 0.2915
+[2024-11-19 08:34:37 alpha_small] (2350976945.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 09:27:46 alpha_small] (2350976945.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:27:47 alpha_small] (2350976945.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:30:04 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:30:04 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:30:18 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 09:30:20 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 129): INFO number of params, M: 0.2915
+[2024-11-19 09:30:20 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 09:38:26 alpha_small] (2350976945.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:38:26 alpha_small] (2350976945.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:38:33 alpha_small] (2350976945.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 09:38:38 alpha_small] (2350976945.py 129): INFO number of params, M: 0.2915
+[2024-11-19 09:38:38 alpha_small] (2350976945.py 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 09:48:46 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:48:46 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:48:51 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 09:48:54 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 129): INFO number of params, M: 0.2915
+[2024-11-19 09:48:54 alpha_small] (<ipython-input-1-fcfdd6cf5b24> 132): INFO number of GFLOPs: 0.47836655378341675
+[2024-11-19 09:50:10 alpha_small] (2350976945.py 431): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:50:10 alpha_small] (2350976945.py 436): INFO Full config saved to alpha_small/all_targets/config.json
+[2024-11-19 09:50:15 alpha_small] (2350976945.py 121): INFO Creating model:radarswin/alpha_small
+[2024-11-19 09:50:18 alpha_small] (2350976945.py 129): INFO number of params, M: 0.2915
+[2024-11-19 09:50:18 alpha_small] (2350976945.py 132): INFO number of GFLOPs: 0.47836655378341675

@@ -1,0 +1,4 @@
+[2024-07-24 13:46:09 radarswin_tiny] (main.py 412): INFO Full config saved to radarswin_tiny/default/config.json
+[2024-07-24 13:46:09 radarswin_tiny] (main.py 116): INFO Creating model:radarswin/radarswin_tiny
+[2024-07-24 13:46:10 radarswin_tiny] (main.py 124): INFO number of params, M: 0.049534
+[2024-07-24 13:46:10 radarswin_tiny] (main.py 127): INFO number of GFLOPs: 0.034123681485652924

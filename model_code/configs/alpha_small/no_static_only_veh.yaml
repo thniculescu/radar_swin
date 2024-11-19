@@ -13,8 +13,12 @@ MODEL:
   DROP_PATH_RATE: 0.2
   NUM_CLASSES: 1
 
+  TRACKING: True
+
   # RESUME: 
-  PRETRAINED: '../checkpoints/alpha_small/no_static_only_veh/ckpt_epoch_200.pth'
+  # PRETRAINED: '../checkpoints/alpha_small/no_static_only_veh/ckpt_epoch_200.pth'
+  PRETRAINED: '../model_code/alpha_small/no_static_only_veh/ckpt_epoch_200.pth'
+
 
   RADARSWIN:
     PATCH_SIZE: [1, 1]
@@ -43,7 +47,7 @@ METRICS:
   AP_THR: [0.5, 1.0, 2.0, 4.0]
 
 TRAIN:
-  EPOCHS: 300
+  EPOCHS: 400
   WARMUP_EPOCHS: 4
   WEIGHT_DECAY: 0.01
   # BASE_LR: 1.25e-4 # 4096 batch-size

@@ -1,4 +1,9 @@
 # %%
+import os, json, time, timeit
+
+if os.path.exists('./viz_preproc'):
+    os.chdir('./viz_preproc')
+
 from matplotlib import animation
 from nuscenes.nuscenes import NuScenes
 import matplotlib.pyplot as plt
@@ -6,23 +11,20 @@ import numpy as np
 from pyquaternion import Quaternion
 from nuscenes.utils.data_classes import RadarPointCloud
 from nuscenes.utils.geometry_utils import transform_matrix, view_points
-import os, json, time, timeit
 from multiprocessing import Pool
 from functools import partial, reduce
-from utils import plot_proc_data, calc_ego_vel, split_time, split_ang_bins, filter_boxes, get_points, CATEGORY_NAMES, ATTRIBUTE_NAMES, ANN_FEATURE_SIZE, COMP_TYPE
+
+from utils import plot_proc_data, calc_ego_vel, render_whole_sample, split_time, split_ang_bins, filter_boxes, get_points, CATEGORY_NAMES, ATTRIBUTE_NAMES, ANN_FEATURE_SIZE, COMP_TYPE
+
 # %matplotlib inline
 
 # %%
-# os.chdir('./viz_preproc')
 
 with open('../run_paths.json') as f:
     paths = json.load(f)
 
-# DATASET_PATH = paths['nusc-trainval']
 DATASET_PATH = paths['tmp']
 DATASET_NAME = 'v1.0-trainval'
-
-# DATASET_PATH = paths['nusc-mini']
 # DATASET_NAME = 'v1.0-mini'
 
 OUT_PREPROC_PATH = './output_preproc'
@@ -40,7 +42,18 @@ nusc = NuScenes(version=DATASET_NAME, dataroot=DATASET_PATH, verbose=True)
 # total_radar_points = 0
 # total_used_radar_points = 0
 # %%
-def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=6, ang_bins=360, min_radar_pts=1, min_lidar_pts=1, save_output=True, out_path=None, vis_level=0, only_vehicle=True, only_moving_targets=False, only_moving_radar_points=False, make_movie=False):
+def preproc_scene(scene_id,
+                  nr_samps = 50, 
+                  relative_vel=False,
+                  max_range=50, nr_sweeps=6, ang_bins=360,
+                  min_radar_pts=0, min_lidar_pts=0, vis_level=0, 
+                  only_vehicle=False, 
+                  only_moving_targets=False, 
+                  only_moving_radar_points=False, 
+                  plots=False, 
+                  make_movie=False,
+                  save_output=True,
+                  out_path=None):
     
     if make_movie:
         # assert save_output, 'Cannot make movie without saving output'
@@ -59,13 +72,13 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
     scene_name = nusc.scene[scene_id]['name'].split('-')[1]
     print(scene_name)
     # result = {scene_name: { 'radar' : np.empty((0, 6, ang_bins, 3)), 'anns' : np.empty((0, ANN_FEATURE_SIZE)), 'ego_vels' : np.empty((0, 2)), 'heatmap' : np.empty((0, ang_bins))}}
-    result = {scene_name: { 'radar' : [], 'anns' : [], 'ego_vels' : [], 'heatmap' : []}}
+    result = {scene_name: { 'radar' : [], 'anns' : [], 'ego_vels' : [], 'heatmap' : [], 'timestamp' : [], 'ego_translation' : [], 'ego_rotation' : [], 'anns_tokens' : []}}
     
     cur_sample = nusc.get('sample', nusc.scene[scene_id]['first_sample_token'])
     global_ego_vel = calc_ego_vel(nusc, cur_sample)
 
-    cur_sample = nusc.get('sample', cur_sample['next'])
     t0 = cur_sample['timestamp']
+    cur_sample = nusc.get('sample', cur_sample['next'])
     
     for nr_samps in range(min(nr_samps, nusc.scene[scene_id]['nbr_samples'] - 2)):
         # if nr_samps not in range(7, 8):
@@ -99,7 +112,8 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
         #     for gogu in range(1, max_range // 10 + 1):
         #         ax.plot(np.cos(gigel) * gogu * 10, np.sin(gigel) * gogu * 10, 'k--', linewidth=0.5)
 
-
+        # chnheight = 0
+        # plt.figure(figsize=(8, 8))
         for chan_type, chan_tok in cur_sample['data'].items():
             if 'RADAR' in chan_type:
 
@@ -126,6 +140,11 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
                 #     # ax.arrow(test_pc2[i, 0], test_pc2[i, 1], test_pc2[i, 6], test_pc2[i, 7], head_width=0.5, head_length=0.5, fc='r', ec='g')
 
                 points, times = split_time(points, times)
+                # print('Chan:', chan_type)
+                # print(times - (t0 / 1e6))
+                # plt.plot(times - (t0 / 1e6), np.full(times.shape, chnheight), 'b.')
+                # chnheight += 1
+
                 for idx,p in enumerate(points):
                     sweep_points[idx] = np.append(sweep_points[idx], p, axis=0)
 
@@ -160,6 +179,7 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
         # go through sample, get all annotation positions and box sizes
         _, boxes, _ = nusc.get_sample_data(cur_sample['data'][ref_chan], selected_anntokens=filtered_anns, use_flat_vehicle_coordinates=True)
         sweep_anns = np.empty((0, ANN_FEATURE_SIZE))
+        sweep_anns_tokens = np.empty((0, ))
 
         box_corners = np.empty((0, 4, 2))
         box_segments = np.empty((0, 6))
@@ -188,6 +208,8 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
             #box velovity in ego coord, not taking into account ego movement
             box.velocity = np.dot(Quaternion(scalar=np.cos(cur_yaw / 2), vector=[0, 0, np.sin(cur_yaw / 2)]).inverse.rotation_matrix, box.velocity)
             vel = box.velocity[:2]
+
+            # USING RELATIVE GROUND TRUTH VELOCITY
             # vel = vel - cur_velocity
 
             #split velocity into radial and tangential
@@ -195,7 +217,7 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
             vt = np.dot(vel, [-np.sin(th_rad), np.cos(th_rad)])
             vel = np.array([vr, vt]) / r # for real sweeps
 
-            # ground truth: ANN_FEATURE_SIZE = 16
+            # ground truth: ANN_FEATURE_SIZE = 17
             # range - m
             # angle - radians
             # orientation - front relative to ray - radians
@@ -249,6 +271,7 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
                     r, th_rad, rel_orient_rad, *rel_size, *vel,
                     relevant_rs[0], relevant_ths[0], relevant_rs[1], relevant_ths[1],
                     box_vis, box_class, box_att, sample_ann['num_radar_pts'], sample_ann['num_lidar_pts']))))
+            sweep_anns_tokens = np.append(sweep_anns_tokens, sample_ann['instance_token'])
 
             #TODO: segment discontinuity
             # if relevant_ths[0] < np.pi and relevant_ths[1] > np.pi:
@@ -283,22 +306,18 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
             # plt.title('Sample: ' + str(nr_samps + 1) + ', nsweeps: ' + str(nr_sweeps) + ', Comp: ' + COMP_TYPE + ', Time: ' + str((cur_sample['timestamp'] - t0) / 1e6))
 
 
-        cur_sample = nusc.get('sample', cur_sample['next'])
 
         if save_output:
             result[scene_name]['radar'].append(sweep_frame)
             result[scene_name]['anns'].append(sweep_anns)
+            result[scene_name]['anns_tokens'].append(sweep_anns_tokens)
             result[scene_name]['ego_vels'].append(cur_velocity)
             result[scene_name]['heatmap'].append(box_heatmap)
+            result[scene_name]['timestamp'].append((cur_sample['timestamp'] - t0) / 1e6)
+            result[scene_name]['ego_translation'].append(nusc.get('ego_pose', ref_sd_record['ego_pose_token'])['translation'])
+            result[scene_name]['ego_rotation'].append(nusc.get('ego_pose', ref_sd_record['ego_pose_token'])['rotation'])
 
-            # np.vstack((result[scene_name]['radar'], [sweep_frame]))
-            # np.vstack((result[scene_name]['anns'], [sweep_anns]))
-            # np.vstack((result[scene_name]['ego_vels'], [cur_velocity]))
-            # np.vstack((result[scene_name]['heatmap'], [box_heatmap]))
-
-
-            
-            # print(sweep_anns)
+        cur_sample = nusc.get('sample', cur_sample['next'])
 
     if save_output:
         # np.save(os.path.join(out_path, scene_name + '.npy'), result, allow_pickle=True)
@@ -308,28 +327,46 @@ def preproc_scene(scene_id, nr_samps = 50, plots=False, max_range=50, nr_sweeps=
 
 # %%
 
-# start_time = timeit.default_timer()
-# with Pool(32) as p:
-#     res = p.map(partial(preproc_scene, plots=False, save_output=True), range(len(nusc.scene)))
-#     # res = p.map(partial(preproc_scene, plots=False, save_output=True), range(32))
-# print('\n\nElapsed TOTAL time preproc dataset:', timeit.default_timer() - start_time)
+start_time = timeit.default_timer()
+with Pool(32) as p:
+    res = p.map(partial(preproc_scene,
+                        nr_samps=50,
+                        relative_vel=False, 
+                        max_range=50, nr_sweeps=6, ang_bins=360, 
+                        min_radar_pts=1, min_lidar_pts=1, vis_level=0, 
+                        only_vehicle=False, 
+                        only_moving_targets=False, 
+                        only_moving_radar_points=False, 
+                        plots=False, 
+                        make_movie=False,
+                        save_output=True,
+                        ), range(len(nusc.scene)))
+print('\n\nElapsed TOTAL time preproc dataset:', timeit.default_timer() - start_time)
 
-# start_time = timeit.default_timer()
-# final_res = reduce(lambda x, y: {**x, **y}, res, {})
-# np.save(os.path.join(OUT_PREPROC_PATH, 'all_scenes.npy'), final_res, allow_pickle=True)
-# print('Elapsed time reduce + save dataset:', timeit.default_timer() - start_time)
+start_time = timeit.default_timer()
+final_res = reduce(lambda x, y: {**x, **y}, res, {})
+np.save(os.path.join(OUT_PREPROC_PATH, 'all_scenes.npy'), final_res, allow_pickle=True)
+print('Elapsed time reduce + save dataset:', timeit.default_timer() - start_time)
 
 
 # %%
 
-for x in range(4, 5):
-    res = preproc_scene(x, nr_samps=6, plots=True, max_range=50, nr_sweeps=1, ang_bins=360, save_output=False, min_radar_pts=0, min_lidar_pts=0, vis_level=0, only_vehicle=False, only_moving_targets=False, only_moving_radar_points=False, make_movie=True)
+# for x in range(2, 3):
+# # for x in range(4, 5):
+#     res = preproc_scene(x,
+#                         nr_samps=10,
+#                         relative_vel=False, 
+#                         max_range=50, nr_sweeps=6, ang_bins=360, 
+#                         min_radar_pts=1, min_lidar_pts=1, vis_level=0, 
+#                         only_vehicle=False, 
+#                         only_moving_targets=False, 
+#                         only_moving_radar_points=False, 
+#                         plots=True, 
+#                         make_movie=False,
+#                         save_output=True,)
 
-# render_whole_sample(nusc, nr_scene=0, nr_sample=2)
+# render_whole_sample(nusc, nr_scene=4, nr_sample=5, nr_sweeps=1)
 
-# print (len(res['0061']['radar']))
-
-# render_whole_sample(nusc, nr_scene=1, nr_sample=2)
 # %%
 
 #DEBUG check how many points are used

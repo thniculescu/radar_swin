@@ -13,8 +13,11 @@ MODEL:
   DROP_PATH_RATE: 0.2
   NUM_CLASSES: 1
 
+  TRACKING: True
+
   # RESUME: 
-  # PRETRAINED: '../checkpoints/alpha_small/only_veh/ckpt_epoch_200.pth'
+  # PRETRAINED: '../checkpoints/alpha_small/only_veh/ckpt_epoch_20.pth'
+  # PRETRAINED: '../model_code/alpha_small/only_veh/ckpt_epoch_399.pth'
   
   RADARSWIN:
     PATCH_SIZE: [1, 1]
@@ -63,4 +66,4 @@ FUSED_LAYERNORM: False
 FUSED_WINDOW_PROCESS: False
 SAVE_FREQ: 5
 
-# EVAL_MODE: True
+EVAL_MODE: True

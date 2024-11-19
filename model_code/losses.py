@@ -13,6 +13,8 @@ class RadarSwinLoss(nn.Module):
         self.alpha = 2
         self.beta = 4
 
+        self.tracking = config.MODEL.TRACKING
+
     def forward(self, pred, target):
 
         # print(pred.shape)
@@ -64,12 +66,24 @@ class RadarSwinLoss(nn.Module):
 
         # velocity_loss = torch.sum(torch.abs(mask_pred[:, 6] - mask_target[:, 6]))
         velocity_R_loss = torch.sum(torch.abs(mask_pred[:, 6] * mask_pred[:, 1] - mask_target[:, 6] * mask_target[:, 1])) / (sum_mask + 1e-4)
-        
-        # velocity_T_loss = torch.sum(torch.abs(mask_pred[:, 7] * mask_pred[:, 1] - mask_target[:, 7] * mask_target[:, 1])) / (sum_mask + 1e-4)
+
+        if self.tracking:
+            velocity_T_loss = torch.sum(torch.abs(mask_pred[:, 7] * mask_pred[:, 1] - mask_target[:, 7] * mask_target[:, 1])) / (sum_mask + 1e-4)
+        else:
+            velocity_T_loss = 0.0
+
+        # print("velocityT", velocity_T_loss)
+
         # assert torch.isnan(velocity_loss) == False, 'NaN velocity loss'
         # print("ve", velocity_loss)
 
 
         # return focal_loss + range_loss * 0.1
         # return focal_loss + 0.1 * range_loss + 0.1 * velocity_R_loss
-        return focal_loss + 0.1 * range_loss + 0.1 * velocity_R_loss + 0.1 * bbox_ori_loss + 0.1 * bbox_size_loss
+        return \
+            focal_loss + \
+            0.1 * range_loss + \
+            0.1 * velocity_R_loss + \
+            0.1 * velocity_T_loss + \
+            0.1 * bbox_ori_loss + \
+            0.1 * bbox_size_loss

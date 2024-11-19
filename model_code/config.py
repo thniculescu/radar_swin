@@ -65,6 +65,9 @@ _C.MODEL.DROP_PATH_RATE = 0.1
 # # Label Smoothing
 # _C.MODEL.LABEL_SMOOTHING = 0.1
 
+_C.MODEL.TRACKING = False
+
+
 # RadarSwin parameters
 _C.MODEL.RADARSWIN = CN()
 _C.MODEL.RADARSWIN.PATCH_SIZE = (1, 1)
@@ -254,6 +257,8 @@ _C.PRINT_FREQ = 10
 _C.SEED = 0
 # Perform evaluation only, overwritten by command line argument
 _C.EVAL_MODE = False
+# Change val dataloader for nusc all scene paralel eval
+_C.ALL_SCENE_PARALLEL = False
 # Test throughput only, overwritten by command line argument
 _C.THROUGHPUT_MODE = False
 # local rank for DistributedDataParallel, given by command line argument

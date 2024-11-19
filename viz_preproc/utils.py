@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pyquaternion import Quaternion
 from nuscenes.utils.data_classes import RadarPointCloud
+from nuscenes.nuscenes import NuScenes
 from nuscenes.utils.geometry_utils import transform_matrix, view_points
+# from nuscenes import render_sample
 
 CATEGORY_NAMES = {
     'animal': 0,
@@ -44,11 +46,17 @@ ATTRIBUTE_NAMES = {
     'other_obj.static': 8, #added for other objects which are without attribute (movable_obj, static_obj, animal)
 }
 
-ANN_FEATURE_SIZE = 7 + 4 + 1 + 1 + 1 + 1 + 1# range [m], angle [rad], orientation@angle [rad], size/r [w l], velocity/r [vr vt], segment-genheatmap [r_min th_min r_max th_max], visibility [0-4], class, attribute(moving status), num_radar_pts, num_lidar_pts
+ANN_FEATURE_SIZE = 7 + 4 + 5
+#  range [m], angle [rad], orientation@angle [rad], size/r [w l], velocity/r [vr vt]
+#  segment-genheatmap [r_min th_min r_max th_max],
+#  visibility [0-4], 
+#  class
+#  attribute(moving status)
+#  num_radar_pts, num_lidar_pts
 COMP_TYPE = 'COMP' # COMP, RAW, COMP_MAN, RAW_MAN
 
 def get_points(nusc, cur_sample, chan_type, chan_tok, ref_chan, ref_sd_record, nsweeps, speed_ref, max_range=60, ego_vels=None):
-    pc, times = RadarPointCloud.from_file_multisweep(nusc, cur_sample, chan_type, ref_chan, nsweeps=nsweeps)
+    pc, times = RadarPointCloud.from_file_multisweep(nusc, cur_sample, chan_type, ref_chan, nsweeps=nsweeps, min_distance=1.0)
     #use global timestamps    
     ref_time = 1e-6 * ref_sd_record['timestamp']
     times = ref_time - times #use global timestamps
@@ -175,7 +183,9 @@ def get_points(nusc, cur_sample, chan_type, chan_tok, ref_chan, ref_sd_record, n
     ranges = np.hypot(xs, ys)
     angles = np.degrees(np.arctan2(ys, xs))
     angles[angles < 0] += 360
-    speeds = np.hypot(velocities[0], velocities[1])
+    speeds = np.hypot(deltas_vel[:, 0], deltas_vel[:, 1]) * np.sign(np.cos(np.arctan2(deltas_vel[:, 1], deltas_vel[:, 0]) - np.arctan2(ys, xs)))
+    # speeds = np.hypot(velocities[0], velocities[1])
+    # speeds = np.hypot(velocities[0], velocities[1]) * np.sign(np.cos(np.arctan2(ys, xs) - np.arctan2(velocities[1], velocities[0])))
     rcs = pc.points[5, :].T
     
     # mask angles, only when range is < max_range
@@ -224,7 +234,7 @@ def split_ang_bins(points, nr_ang_bins=360): # points = [range, angle, speed, rc
     points = points[idx]
 
     # binned_sweep = np.zeros((nr_ang_bins, 3))
-    binned_sweep = np.full((nr_ang_bins, 3), 0)
+    binned_sweep = np.full((nr_ang_bins, 3), 0, dtype=np.float32)
     for p in points:
         binned_sweep[int(p[1]), 0] = p[0]
         binned_sweep[int(p[1]), 1] = p[2]
@@ -293,18 +303,40 @@ def filter_boxes(nusc, anns, max_range=60, vis_level=0, min_radar_pts=1, min_lid
     return filtered_anns
 
 
-def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, box_corners, t0, NR_SWEEPS, MAX_RANGE=60, make_movie=False, scene_name=None):
-    fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize=(8, 8))
+def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, box_corners, t0, nr_sweeps, max_range=60, make_movie=False, scene_name=None):
+    fig, ax = plt.subplots(subplot_kw={'polar': 'True'}, figsize=(8, 8))
     #set maxrange 60
     ax.set_title('Sample: ' + str(nr_samps + 1) + ' Time: ' + str((cur_sample['timestamp'] - t0) / 1e6))
-    ax.set_ylim(0, MAX_RANGE)
-    for sw in reversed(range(NR_SWEEPS)):
-        # ax.scatter(np.radians(sweep_points[sw][:, 1]), sweep_points[sw][:, 0], s=7, c='r')
+    ax.set_ylim(0, max_range)
+    # ax.set_yticks(np.arange(0, max_range, 1))
 
-        ax.scatter(np.radians(np.arange(0, 360, 1)), sweep_frame[sw][:, 0], marker='o', s=4, c='b')
+    colors = ['#00FF00', '#00D815', '#00B13C', '#008A63', '#00638A', '#003CB1', '#0015D8', '#0000FF'][::-1]
+
+    for idx in reversed(range(nr_sweeps)):
+        
+        # angles = np.radians(np.arange(0, sweep_frame.shape[1], 1))
+        angles = np.linspace(0, 2 * np.pi, sweep_frame.shape[1], endpoint=False)
+
+        #points
+        ax.scatter(angles, 
+                   sweep_frame[idx][:, 0], 
+                   marker='o', s=7, c=colors[idx], 
+                   alpha=1 - 0.9 * idx / nr_sweeps)
+
+        #velocities
+        # ax.quiver(angles, 
+        #           sweep_frame[idx][:, 0], 
+        #           np.zeros_like(angles),
+        #           sweep_frame[idx][:, 1],
+        #           angles='xy', scale_units='xy', scale=1/6,
+        #           color='k', 
+        #           alpha=1 - 0.9 * idx / nr_sweeps)
+        
+        #not binned points
+        # ax.scatter(np.radians(sweep_points[idx][:, 1]), sweep_points[idx][:, 0], s=1, c='r')
 
     
-    ax.scatter(sweep_anns[:, 1], sweep_anns[:, 0], s=47, c='r', marker='x')
+    ax.scatter(sweep_anns[:, 1], sweep_anns[:, 0], s=25, c='r', marker='x')
         
     for idx in range(sweep_anns.shape[0]):
         cor = box_corners[idx]
@@ -315,21 +347,32 @@ def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, 
         angles = np.arctan2(cor[:, 1], cor[:, 0])
         ax.plot(angles, ranges, 'r')
 
-        r, th_ang = sweep_anns[idx, :2]
-
+        color = 'r'
         #plot radial velocity
+        ax.arrow(sweep_anns[idx, 1], sweep_anns[idx, 0], 0, sweep_anns[idx, 0] * sweep_anns[idx, 5], lw=4, fc=color, ec=color, head_width=0, head_length=0, alpha=0.5)
+
+        #plot tangential velocity
+        ranges = [sweep_anns[idx, 0], np.hypot(sweep_anns[idx, 0], sweep_anns[idx, 6] * sweep_anns[idx, 0])]
+        angles = [sweep_anns[idx, 1], sweep_anns[idx, 1] + np.arcsin(sweep_anns[idx, 6] * sweep_anns[idx, 0] / ranges[1])]       
+        ax.arrow(angles[0], ranges[0], angles[1] - angles[0], ranges[1] - ranges[0], lw=4, fc=color, ec=color, head_width=0, head_length=0, alpha=0.5)
+
+
+
+        # OLD plot radial velocity
+        r, th_ang = sweep_anns[idx, :2]
         ranges = [r, r + sweep_anns[idx, 5] * r]
         angles = [th_ang, th_ang]
 
         if ranges[1] < 0:
             ranges[1] = -ranges[1]
             angles[1] = angles[1] + np.pi
-        ax.plot(angles, ranges, 'k')
+        ax.plot(angles, ranges, 'g')
 
-        #plot tangential velocity
+        #OLD plot tangential velocity
         ranges = [r, np.hypot(r, sweep_anns[idx, 6] * r)]
         angles = [th_ang, th_ang + np.arcsin(sweep_anns[idx, 6] * r / ranges[1])]
-        ax.plot(angles, ranges, 'k')
+        ax.plot(angles, ranges, 'g')
+        
     
     if make_movie:
         os.makedirs(f'./plots/{scene_name}', exist_ok=True)
@@ -337,7 +380,7 @@ def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, 
         plt.close()
 
 
-def render_whole_sample(nusc, nr_scene, nr_sample, nr_sweeps=6):
+def render_whole_sample(nusc: 'NuScenes', nr_scene, nr_sample, nr_sweeps=6):
     first = nusc.scene[nr_scene]['first_sample_token']
     while nr_sample > 0:
         cur_sample = nusc.get('sample', first)
