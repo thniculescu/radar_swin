@@ -16,8 +16,8 @@ MODEL:
   TRACKING: True
 
   # RESUME: 
-  PRETRAINED: '../checkpoints/track/alpha_small/all_targets/ckpt_epoch_350.pth'
-  # PRETRAINED: '../model_code/alpha_small/all_targets/ckpt_epoch_399.pth'
+  # PRETRAINED: '../checkpoints/track/alpha_small/all_targets/ckpt_epoch_350.pth'
+  PRETRAINED: '../model_code/alpha_small/all_targets_rot_track/ckpt_epoch_399.pth'
 
   RADARSWIN:
     PATCH_SIZE: [1, 1]

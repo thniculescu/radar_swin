@@ -3,6 +3,7 @@
 #each folder in ./plots is a scene
 #make a video for each scene, concatenating all the frames in the folder
 
+import time
 import cv2
 import os
 import imageio
@@ -27,12 +28,14 @@ def make_video(scene_folder):
     ims = []
     for frame in frames:
         ims.append(imageio.imread(os.path.join(scene_folder, frame)))
-    imageio.mimsave(scene_folder + '.gif', ims, duration=200)
+    imageio.mimsave(scene_folder + '.gif', ims, duration=500)
 
 #make a video for each scene
 for scene in os.listdir('./plots'):
     if os.path.isdir(os.path.join('./plots', scene)):
+        start_time = time.time()
         make_video(os.path.join('./plots', scene))
+        print("scene: ", scene, f' time elapsed {time.time() - start_time}')
 
 #save video to ./videos
 #create ./videos if it doesn't exist

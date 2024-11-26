@@ -136,8 +136,8 @@ class RadarSwinDataSet(Dataset):
         if (config.MODEL.TRACKING):
             #filter out sweep_nr = 0 for all scenes
             self.sweeps = [(scene_id, sweep_nr) for scene_id, sweep_nr in self.sweeps if sweep_nr != 0]
-            #sort self.sweeps by sweep_nr and then scene_id
         if (config.ALL_SCENE_PARALLEL):
+            #sort self.sweeps by sweep_nr and then scene_id
             self.sweeps.sort(key=lambda x: (x[1], x[0]))
 
         # print("sweeps", self.sweeps[:50])
@@ -162,7 +162,7 @@ class RadarSwinDataSet(Dataset):
             target = self.target_transform((anns, hmap))
 
         if self.config.MODEL.TRACKING:
-            prev_hmap = torch.from_numpy(RadarSwinDataSet.data[self.sweeps[index][0]]['heatmap'][self.sweeps[index][1]-1])
+            prev_hmap = torch.from_numpy(RadarSwinDataSet.data[self.sweeps[index][0]]['heatmap'][self.sweeps[index][1] - 1])
             # stack hmap 6 times:
             prev_hmap = torch.stack([prev_hmap for _ in range(6)], dim=0).to(torch.float16)
             prev_hmap = prev_hmap.unsqueeze(0)

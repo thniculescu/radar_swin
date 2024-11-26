@@ -8,9 +8,11 @@ import os
 # LOG_PATH = '../checkpoints/detec/alpha_small/all_targets/log_rank0.txt'
 # LOG_PATH = '../checkpoints/track/alpha_small/no_static_only_veh/log_rank0.txt'
 # LOG_PATH = '../checkpoints/track/alpha_small/only_veh/log_rank0.txt'
-LOG_PATH = '../checkpoints/track/alpha_small/all_targets/log_rank0.txt'
+# LOG_PATH = '../checkpoints/track/alpha_small/all_targets/log_rank0.txt'
 
-# LOG_PATH = '../model_code/alpha_small/all_targets_no_rl_filter_track/log_rank0.txt'
+# LOG_PATH = '../model_code/alpha_small/all_targets_rot_track/log_rank0.txt'
+# LOG_PATH = '../model_code/alpha_small/only_veh_rot_track/log_rank0.txt'
+LOG_PATH = '../model_code/alpha_small/no_static_only_veh_rot_track/log_rank0.txt'
 
 
 with open(LOG_PATH, 'r') as f:

@@ -96,10 +96,12 @@ def parse_option():
     # print("CWDDD:", os.getcwd())
 
     # CONFIG_PATH = './configs/alpha_small/only_veh.yaml'
-    CONFIG_PATH = './configs/alpha_small/all_targets.yaml'
+    # CONFIG_PATH = './configs/alpha_small/all_targets.yaml'
     # CONFIG_PATH = './configs/alpha_small/no_static_only_veh.yaml'
-    # CONFIG_PATH = './configs/alpha_small/all_targets_no_filt.yaml'
-    # CONFIG_PATH = './configs/alpha_small/all_targets_no_filt_tr.yaml'
+
+    # CONFIG_PATH = './configs/alpha_small/all_targets_rot_tr.yaml'
+    # CONFIG_PATH = './configs/alpha_small/only_veh_rot_tr.yaml'
+    CONFIG_PATH = './configs/alpha_small/no_static_only_veh_rot_tr.yaml'
 
     parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
     parser.add_argument('--cfg', type=str, required=False, metavar="FILE", help='path to config file', default=CONFIG_PATH)
@@ -195,7 +197,7 @@ def main(config, logger):
         logger.disabled = False
 
         if config.EVAL_MODE:
-            do_plots2(config, data_loader_val, model)
+            do_plots(config, data_loader_val, model)
 
         return
 

@@ -41,6 +41,8 @@ class target_transform(object):
         anns[:, 0] = torch.floor(torch.rad2deg(anns[:, 0]))
 
         anns = torch.hstack([anns[:, :3], anns[:, [2]], anns[:, 3:7]]) # double orientation column
+        
+        #KEEP RADIANS EXPERIMENT
         anns[:, 2] = torch.sin(anns[:, 2])
         anns[:, 3] = torch.cos(anns[:, 3])
 

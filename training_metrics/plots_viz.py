@@ -5,15 +5,15 @@ import yaml
 from plot_utils import do_plots, get_ego_track_cart
 import matplotlib.pyplot as plt
 
-config_path = '../model_code/configs/alpha_small/all_targets.yaml'
+config_path = '../model_code/configs/alpha_small/all_targets_rot_tr.yaml'
 # config_path = '../model_code/configs/alpha_small/only_veh.yaml'
 # config_path = '../model_code/configs/alpha_small/no_static_only_veh.yaml'
 
 with open(config_path) as file:
     config = yaml.load(file, Loader=yaml.FullLoader)
 
-# data_path = config['DATA']['DATA_PATH']
-data_path = '../preproc_datasets/abs_50m_1r_1l_0v_new/all_targets/all_scenes.npy'
+data_path = config['DATA']['DATA_PATH']
+# data_path = '../preproc_datasets/abs_50m_1r_1l_0v/all_targets/all_scenes.npy'
 print("data_path: ", data_path)
 loaded_data = np.load(data_path, allow_pickle=True).item()
 
@@ -33,11 +33,25 @@ for scene in list(loaded_data.keys()):
 # print("loaded_data[scene_name]['anns'] shape: ", len(loaded_data['0042']['anns']))
 # print("loaded_data[scene_name]['preds'] shape: ", len(loaded_data['0042']['preds']))
 # %%
-SCENE_NAME = '0006'
-# print(loaded_data.keys())
+for scene_name in list(loaded_data.keys())[20:22]:
+    SCENE_NAME = scene_name
+# SCENE_NAME = list(loaded_data.keys())[3]
+# SCENE_NAME = list(loaded_data.keys())[21]
+# SCENE_NAME = '0008' # 2
+# SCENE_NAME = '0104' # 21
 
-trans, rot = get_ego_track_cart(loaded_data, SCENE_NAME)
+    trans, rot = get_ego_track_cart(loaded_data, SCENE_NAME)
 
-do_plots(loaded_data, SCENE_NAME, list(range(0, 6)), show_vels=False, ground_truth=True, predictions=True, vt=True, tracking=False, ego_track=(trans, rot), make_video=False)
+    do_plots(loaded_data, SCENE_NAME, list(range(0, 40)), show_vels=False, ground_truth=True, predictions=True, vt=True, tracking=False, ego_track=(trans, rot), make_video=True)
 
 # %%
+# print(loaded_data[SCENE_NAME]['preds'][1][:, -1])
+
+# hmap = loaded_data[SCENE_NAME]['heatmap'][1]
+# plt.figure()
+# plt.plot(np.array(range(360)), hmap, 'r')
+# plt.plot(np.array(range(360)), loaded_data[SCENE_NAME]['input_hmap'][2], '.b')
+# plt.show()
+
+
+#%%

@@ -9,25 +9,7 @@ def legend_without_duplicate_labels(ax):
     ax.legend(*zip(*unique))
 
 
-def plot_bboxes(ax, anns, ground_truth, tracking = False):
-    if ground_truth is True:
-        color = 'r'
-        line_label = 'target'
-    else:
-        color = 'g'
-        line_label = 'prediction'
-
-    init_anns = np.hstack((anns, np.radians(np.arange(360).reshape(-1, 1))))
-    init_anns = init_anns[init_anns[:, -2] == 1]
-
-    car_ori = np.arcsin(init_anns[:, 2]) + init_anns[:, -1]
-    car_size = init_anns[:, 4:6] * init_anns[:, 1].reshape(-1, 1)
-    car_range = init_anns[:, 1]
-
-    # print(car_ori)
-    # print(car_size)
-    # print(car_range)
-
+def get_car_corners(car_size, car_range, car_ori, car_rot):
     #make corners of rectangles car_size[:, 1] long by car_size[:, 0] wide, facing Ox
     #car_size[:, 1] is parallel to Ox
     #car_size[:, 0] is parallel to Oy
@@ -42,7 +24,7 @@ def plot_bboxes(ax, anns, ground_truth, tracking = False):
     #rotate each box around the origin from car_corners[x, :, :] by car_ori[x]
     car_corners = np.array([np.dot(car_corners[x], np.array([[np.cos(car_ori[x]), np.sin(car_ori[x])], [-np.sin(car_ori[x]), np.cos(car_ori[x])]])) for x in range(car_corners.shape[0])])
     #convert car_range and init_anns[:, -1] from polar coordinates to cartesian coordinates
-    car_trans = np.array([np.array([car_range[x] * np.cos(init_anns[x, -1]), car_range[x] * np.sin(init_anns[x, -1])]) for x in range(car_corners.shape[0])])
+    car_trans = np.array([np.array([car_range[x] * np.cos(car_rot[x]), car_range[x] * np.sin(car_rot[x])]) for x in range(car_corners.shape[0])])
     
 
     for x in range(car_corners.shape[0]):
@@ -54,8 +36,42 @@ def plot_bboxes(ax, anns, ground_truth, tracking = False):
     car_corners = car_corners.reshape(-1, 2)
     car_trans_final = np.array([np.array([np.hypot(car_corners[x, 0], car_corners[x, 1]), np.arctan2(car_corners[x, 1], car_corners[x, 0])]) for x in range(car_corners.shape[0])])
     car_trans_final = car_trans_final.reshape(-1, 4, 2)
-    for x in range(car_trans_final.shape[0]):
-        gigi = car_trans_final[x]
+    return car_trans_final
+
+
+def plot_bboxes(ax, anns, ground_truth, tracking = False):
+    if ground_truth is True:
+        color = 'r'
+        line_label = 'target'
+    else:
+        color = 'g'
+        line_label = 'prediction'
+
+    # init_anns = np.hstack((anns, np.radians(np.arange(360).reshape(-1, 1))))
+    init_anns = np.hstack((anns, np.linspace(0, 2 * np.pi, 360).reshape(-1, 1)))
+
+    init_anns = init_anns[init_anns[:, -2] == 1]
+
+    if ground_truth is True:
+        car_ori = np.atan2(init_anns[:, 2], init_anns[:, 3]) + init_anns[:, -1]
+    else:
+        car_ori = np.atan2(init_anns[:, 2], init_anns[:, 3]) + init_anns[:, -1]
+        # car_ori = np.arcsin(init_anns[:, 2]) + init_anns[:, -1]
+        # car_ori = np.pi - np.arcsin(init_anns[:, 2]) + init_anns[:, -1]
+
+    car_size = init_anns[:, 4:6] * init_anns[:, 1].reshape(-1, 1)
+    car_range = init_anns[:, 1]
+    car_rot = init_anns[:, -1]
+
+    # print(car_ori)
+    # print(car_size)
+    # print(car_range)
+
+    car_corners = get_car_corners(car_size, car_range, car_ori, car_rot)
+
+    
+    for x in range(car_corners.shape[0]):
+        gigi = car_corners[x]
         gigi = np.vstack((gigi, gigi[0]))
         ax.plot(gigi[:, 1], gigi[:, 0], c=color, label=line_label)
 
@@ -71,7 +87,42 @@ def plot_bboxes(ax, anns, ground_truth, tracking = False):
             ax.arrow(angles[0], ranges[0], angles[1] - angles[0], ranges[1] - ranges[0], lw=4, fc=color, ec=color, head_width=0, head_length=0, alpha=0.5)
 
 
+def gen_heatmap(anns):
+    #range, angle, orientation, size [w l], velocity [vr vt]
 
+    car_ori = anns[:, 2] + anns[:, 1]
+    car_size = anns[:, 3:5] * anns[:, 0].reshape(-1, 1)
+    car_range = anns[:, 0]
+    car_rot = anns[:, 1]
+
+    car_corners = get_car_corners(car_size, car_range, car_ori, car_rot)
+    # correction for discontinuity PI/-PI
+    hmap = np.zeros((360, ))
+    for relevant_corners in car_corners:
+        if np.any(relevant_corners[:, 1] > np.pi / 2) and np.any(relevant_corners[:, 1] < -np.pi / 2):
+            relevant_corners[:, 1] += 2 * np.pi
+
+        #keep minimum and maximum relevant th
+        min_th = int(np.round(np.degrees(np.min(relevant_corners[:, 1]))))
+        max_th = int(np.round(np.degrees(np.max(relevant_corners[:, 1]))))
+
+        # relevant_ths = np.array([relevant_ths[min_th], relevant_ths[max_th]])
+        # relevant_rs = np.array([relevant_rs[min_th], relevant_rs[max_th]])
+        mid = (min_th + max_th) // 2
+        std = (max_th - min_th) / 6
+
+        #Max gaussian size = 11degrees
+        if max_th - min_th >= 13:
+            max_th = mid + 5
+            min_th = mid - 5
+        
+        for i in range(min_th, max_th):
+            poz = (i + 180) % 360
+            val_gauss = np.exp(-((i - mid) ** 2) / (2 * std ** 2 + 0.001))
+            hmap[poz] = max(hmap[poz], val_gauss)
+    
+    hmap = np.roll(hmap, 180)
+    return hmap
 
 def do_plots(config, data_loader_val, model):
     start_time = time.time()
@@ -89,7 +140,7 @@ def do_plots(config, data_loader_val, model):
             final_preds = {}
             for x in test_case:
                 #initial empty list for prediction at sweep 0
-                final_preds[x[0]] = {"preds": [np.empty((0, 9))], "input_hmap": [[]]}
+                final_preds[x[0]] = {"preds": [np.empty((0, 8))], "input_hmap": [[]]}
                 
 
         if keep_next is not None:
@@ -111,6 +162,21 @@ def do_plots(config, data_loader_val, model):
             target = target[:-next_sweep_id_count]
             test_case = test_case[:-next_sweep_id_count]
 
+        for idx, scene_sweep in enumerate(test_case):
+            if batch_nr == 0:
+                break
+            hmap_pred = gen_heatmap(final_preds[scene_sweep[0]]['preds'][scene_sweep[1] - 1])
+
+            # if scene_sweep[0] == '0006' and scene_sweep[1] < 11:
+            #     plt.figure(figsize=(12, 3))
+            #     plt.title(f"scene: {scene_sweep[0]}, sweep: {scene_sweep[1] - 1}")
+            #     plt.plot(np.arange(360), hmap_pred, 'g')
+            #     plt.plot(np.arange(360), samples[idx].cpu().numpy()[3, 0, :], 'r--')
+            
+            #make a copy 6 times of hmap_pred
+            hmap_pred = np.stack([hmap_pred for _ in range(6)], axis=0) #6 x 360
+            samples[idx, 3] = torch.tensor(hmap_pred).to(torch.float16) #4th channel = heatmap (before: r, vr, rcs)
+            
             
         with torch.amp.autocast('cuda', enabled=config.AMP_ENABLE):
             with torch.no_grad():
@@ -122,17 +188,29 @@ def do_plots(config, data_loader_val, model):
             #mask x where it's bigger than both neighbours
             peak_preds_mask = np.logical_and(x[:, 0] > np.roll(x[:, 0], 1), x[:, 0] > np.roll(x[:, 0], -1))
             #mask x where x[:, 0] is smaller than 0.25
-            preds_mask = np.ma.masked_where(x[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR, x[:, 0])
+            preds_mask = np.ma.masked_where(x[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR + 0.15, x[:, 0])
             preds_mask = np.ma.getmask(preds_mask)
             #intersect the two masks
             preds_mask = np.logical_and(preds_mask, peak_preds_mask)
             #keep only unmasked lines of x
             #select indices where preds_mask is False
             x = np.hstack((x, np.linspace(0, 2 * np.pi, config.DATA.INPUT_SIZE[1]).reshape(-1, 1)))
-            x[:, 2] = np.arcsin(x[:, 2])
+
+
+            # x[:, 2] = np.arcsin(x[:, 2])
+            x[:, 2] = np.atan2(x[:, 2], x[:, 3]) ###TODO ATAN2 change instead of arcsin
+
             x = x[preds_mask]
-            #range, angle, orientation, size [w l], velocity [vr vt]
+            # hmap, range, orientation [sin, cos], size [w l], velocity [vr vt]
             x = x[:, [1, -1, 2, 4, 5, 6, 7, 0]]
+            #range, angle, orientation, size [w l], velocity [vr vt] hmap
+            
+            #remove clutter big buses in front
+            # for idxx in range(x.shape[0]):
+            #     if x[idxx, 4] * x[idxx, 0] > 5:
+            #         x[idxx, 4] = 5 / x[idxx, 0]
+            
+
             # print("x shape: ", x.shape)
             final_preds[test_case[idx][0]]["preds"].append(np.array(x))
             final_preds[test_case[idx][0]]["input_hmap"].append(samples[idx].cpu().numpy()[3, 0, :])
@@ -146,12 +224,13 @@ def do_plots(config, data_loader_val, model):
 
 def do_plots2(config, data_loader_val, model):
     model.cuda()
+    model.eval()
 
     # take a sample from the validation set
     total = 0
     for i, (samples, target, test_case) in enumerate(data_loader_val):
-        if i > 0:
-            break
+        if i < 3 or i > 6:
+            continue
 
         test_case = [(test_case[0][i], int(test_case[1][i])) for i in range(len(test_case[0]))]
 
@@ -235,7 +314,7 @@ def do_plots2(config, data_loader_val, model):
             # for x in range(good_preds.shape[0]):
             #     ax.arrow(good_preds[x, -1], good_preds[x, 1], 0, good_preds[x, 1] * good_preds[x, 6], lw=4, fc='g', ec='k', head_width=0, head_length=0)
 
-            ax.scatter(np.radians(np.arange(360)), preds[:, 1], marker='o', c='g', s=50, label='target_predicions')
+            ax.scatter(np.linspace(0, 2 * np.pi, config.DATA.INPUT_SIZE[1], endpoint=False), preds[:, 1], marker='o', c='g', s=50, label='target_predicions')
             
                   
             

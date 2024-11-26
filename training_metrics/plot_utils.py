@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 from pyquaternion import Quaternion
@@ -27,38 +28,7 @@ def plot_sweeps(ax, radar_sw, nr_sweeps=6, show_vels=False):
                     alpha=1 - 0.9 * idx / nr_sweeps)
 
 
-def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=None):
-    if ground_truth is True:
-        color = 'r'
-        line_label = 'target'
-    else:
-        color = 'g'
-        line_label = 'prediction'
-
-    # ground truth: ANN_FEATURE_SIZE = 17
-    # range - m
-    # angle - radians
-    # orientation - front relative to ray - radians
-    # size - [w l] - relative to range
-    # velocity - [vr vt] - relative to range
-    # segment - [r_min th_min r_max th_max]
-    # visibility - 0-4
-    # class - 0-22
-    # attribute - 0-8
-    # num_radar_pts
-    # num_lidar_pts
-
-    anns = np.array(anns)
-
-    car_ori = anns[:, 2] + anns[:, 1]
-    # car_ori = np.arcsin(anns[:, 2]) + anns[:, 1]
-    car_size = anns[:, 3:5] * anns[:, 0].reshape(-1, 1)
-    car_range = anns[:, 0]
-
-    # print(car_ori)
-    # print(car_size)
-    # print(car_range)
-
+def get_car_corners(car_size, car_range, car_ori, car_rot):
     #make corners of rectangles car_size[:, 1] long by car_size[:, 0] wide, facing Ox
     #car_size[:, 1] is parallel to Ox
     #car_size[:, 0] is parallel to Oy
@@ -73,7 +43,7 @@ def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=N
     #rotate each box around the origin from car_corners[x, :, :] by car_ori[x]
     car_corners = np.array([np.dot(car_corners[x], np.array([[np.cos(car_ori[x]), np.sin(car_ori[x])], [-np.sin(car_ori[x]), np.cos(car_ori[x])]])) for x in range(car_corners.shape[0])])
     #convert car_range and init_anns[:, -1] from polar coordinates to cartesian coordinates
-    car_trans = np.array([np.array([car_range[x] * np.cos(anns[x, 1]), car_range[x] * np.sin(anns[x, 1])]) for x in range(car_corners.shape[0])])
+    car_trans = np.array([np.array([car_range[x] * np.cos(car_rot[x]), car_range[x] * np.sin(car_rot[x])]) for x in range(car_corners.shape[0])])
     
 
     for x in range(car_corners.shape[0]):
@@ -85,14 +55,53 @@ def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=N
     car_corners = car_corners.reshape(-1, 2)
     car_trans_final = np.array([np.array([np.hypot(car_corners[x, 0], car_corners[x, 1]), np.arctan2(car_corners[x, 1], car_corners[x, 0])]) for x in range(car_corners.shape[0])])
     car_trans_final = car_trans_final.reshape(-1, 4, 2)
-    for x in range(car_trans_final.shape[0]):
-        gigi = car_trans_final[x]
+    return car_trans_final
+
+def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=None):
+    if ground_truth is True:
+        color = 'r'
+        line_label = 'target'
+    else:
+        color = 'g'
+        line_label = 'prediction'
+
+    # ground truth: ANN_FEATURE_SIZE = 17
+    # range - m
+    # angle - radians
+    # orientation - front relative to ray - radians
+    # size - [w l] - relative to range
+    # velocity - [vr vt] - relative to range
+    # ----------------------------------------------------------------
+    # segment - [r_min th_min r_max th_max] ###   preds: hmap/conf
+    # visibility - 0-4
+    # class - 0-22
+    # attribute - 0-8
+    # num_radar_pts
+    # num_lidar_pts
+
+    anns = np.array(anns, dtype=np.float32)
+
+    car_ori = anns[:, 2] + anns[:, 1]
+    car_size = anns[:, 3:5] * anns[:, 0].reshape(-1, 1)
+    car_range = anns[:, 0]
+    car_rot = anns[:, 1]
+
+    if ground_truth is False:
+        # pred_alpha = np.ones((anns.shape[0]))
+        pred_alpha = anns[:, -1]
+    else:
+        pred_alpha = np.ones((anns.shape[0]))
+
+    car_corners = get_car_corners(car_size, car_range, car_ori, car_rot)
+
+    for x in range(car_corners.shape[0]):
+        gigi = car_corners[x]
         gigi = np.vstack((gigi, gigi[0]))
-        colors = ['r', 'g', 'b', 'y', 'c', 'm', 'k', 'w']
+        colors = ['g', 'b', 'y', 'c', 'k']
         if ann_ids is not None:
-            ax.plot(gigi[:, 1], gigi[:, 0], c=colors[hash(ann_ids[x]) % 8], label=line_label)
+            ax.plot(gigi[:, 1], gigi[:, 0], c=colors[hash(ann_ids[x]) % 5], label=line_label)
         else:
-            ax.plot(gigi[:, 1], gigi[:, 0], c=color, label=line_label)
+            ax.plot(gigi[:, 1], gigi[:, 0], c=color, label=line_label, alpha = min(1, pred_alpha[x]))
 
 
     for x in range(car_range.shape[0]):
@@ -137,6 +146,7 @@ def get_ego_track_cart(loaded_data, scene_name):
 
 def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True, predictions=False, vt=False, tracking=False, ego_track=None, make_video=False):
     print("scene_name: ", scene_name)
+    start_time = time.time()
 
     assert scene_name in loaded_data, "scene_name not in loaded_data"
     if make_video:
@@ -144,11 +154,16 @@ def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True
     
     scene = loaded_data[scene_name]
     
+    if predictions is True:
+        assert ego_track is not None, "ego_track is None"
+        track_ids = gen_tracks(scene['preds'], ego_track)
+
     for sw in sweeps:
         if sw < 0 or sw >= len(scene['radar']):
             continue
         radar_sw = scene['radar'][sw]
-        anns = scene['anns'][sw][:, :-1]
+        # anns = scene['anns'][sw][:, :-1]  #TODO: why?
+        anns = scene['anns'][sw]
     
         if predictions is True:
             preds = scene['preds'][sw]
@@ -161,8 +176,9 @@ def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True
         if ground_truth:
             # plot_bboxes(ax, anns, ground_truth=ground_truth, tracking=tracking, ann_ids=scene['anns_tokens'][sw])
             plot_bboxes(ax, anns, ground_truth=ground_truth, tracking=tracking, vt=vt)
+            pass
         if predictions:
-            plot_bboxes(ax, preds, ground_truth=False, tracking=tracking, vt=vt)
+            plot_bboxes(ax, preds, ground_truth=False, tracking=tracking, vt=vt, ann_ids=track_ids[sw])
                         
         if ego_track is not None:
             trans, rot = ego_track
@@ -177,3 +193,101 @@ def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True
         if make_video:
             plt.savefig(f'./plots/{scene_name}/' + str(sw) + '.png')
             plt.close()
+    
+    if make_video:
+        print(f"Time taken: {time.time() - start_time}")
+
+
+def anns_to_cart(anns):
+    #range, angle, orientation, w, l, vr, vt, hmap
+    car_ori = anns[:, 2] + anns[:, 1]
+    car_size = anns[:, 3:5] * anns[:, 0].reshape(-1, 1)
+    car_range = anns[:, 0]
+    car_rot = anns[:, 1]
+
+    car_trans = np.array([np.array([car_range[x] * np.cos(car_rot[x]), car_range[x] * np.sin(car_rot[x])]) for x in range(car_range.shape[0])])
+
+    car_ori_matrix = np.array([[[np.cos(car_ori[x]), -np.sin(car_ori[x])], [np.sin(car_ori[x]), np.cos(car_ori[x])]] for x in range(car_ori.shape[0])])
+
+    car_rot_matrix = np.array([[[np.cos(car_rot[x]), -np.sin(car_rot[x])], [np.sin(car_rot[x]), np.cos(car_rot[x])]] for x in range(car_rot.shape[0])])
+    
+    #car velocity in cartesian coordinates
+    car_vr = anns[:, 5] * car_range
+    car_vt = anns[:, 6] * car_range
+    
+    car_v_endp = np.stack([car_vr + car_range, car_vt], axis=1)
+    car_v_endp = np.array([(car_rot_matrix[x] @ car_v_endp[x].T).T for x in range(car_v_endp.shape[0])])
+    car_v_endp -= car_trans
+
+
+    return car_trans, car_ori_matrix, car_size, car_v_endp
+
+def gen_tracks(all_anns, ego_track):
+    #anns: [[range, angle, orientation, w, l, vr, vt, hmap], ...]
+
+    # plt.figure(figsize=(12, 12))
+    # plt.title('Initial')
+    # plt.xlim(-50, 50)
+    # plt.ylim(-50, 50)
+    # gigi = np.linspace(0, 2 * np.pi, 100)
+    # for x in range(6):
+    #     plt.plot(10 * x * np.cos(gigi), 10 * x *  np.sin(gigi), 'k', alpha=0.3)
+
+    global_anns = [(np.empty((0, 2)), np.empty((0, 2, 2)), np.empty((0, 2)), np.empty((0, 2)))]
+    trans, rot = ego_track
+
+    for idx, anns in enumerate(all_anns):
+        if idx == 0:
+            continue
+        cart_trans, cart_ori, cart_wl, cart_v = anns_to_cart(anns)
+
+        assert len(cart_trans) == len(cart_ori) == len(cart_wl) == len(cart_v), "not all scene anns lens equal"
+
+        if len(cart_trans) == 0:
+            global_anns.append(global_anns[0])
+            continue
+
+        cart_ori = np.array([rot[idx][:2, :2] @ x for x in cart_ori])
+        cart_v = np.array([rot[idx][:2, :2] @ x for x in cart_v])
+        cart_trans = (rot[idx][:2, :2] @ cart_trans.T).T
+        cart_trans += trans[idx][:2]
+
+        #Center
+        # plt.scatter(cart_trans[:, 0], cart_trans[:, 1], c='g', label='pred', marker='x')
+        
+        #Velocity
+        # plt.quiver(cart_trans[:, 0], cart_trans[:, 1], cart_v[:, 0], cart_v[:, 1], angles='xy', scale_units='xy', scale=2, color='k')#, width = 0.005, headwidth=0, headaxislength=0)
+
+        #Orientation
+        # plt.quiver(cart_trans[:, 0], cart_trans[:, 1], cart_ori[:, 0, 0], cart_ori[:, 1, 0], angles='xy', scale_units='xy', scale=1/5, color='r') 
+
+        global_anns.append((cart_trans, cart_ori, cart_wl, cart_v))
+    
+    ids = []
+    to_give = 0
+    for idx, anns in enumerate(all_anns):
+        if idx == 0:
+            ids.append([])
+            continue
+        desc_conf = np.argsort(anns[:, -1])[::-1]
+        last_anns = global_anns[idx - 1]
+        cur_anns = global_anns[idx]
+        last_anns_mask = np.ones(len(last_anns[0]), dtype=bool)
+        new_ids = np.array([-1] * len(cur_anns[0]))
+        for x in desc_conf:
+            diffs = last_anns[0] + last_anns[3] - cur_anns[0][x]
+            diffs = np.hypot(diffs[:, 0], diffs[:, 1])
+            ord_best = np.argsort(diffs)
+            found = 0
+            for best in ord_best:
+                if diffs[best] <= max(cur_anns[2][x][0], cur_anns[2][x][1]) and last_anns_mask[best]: #TODO max or sqrt like centertrack?
+                    new_ids[x] = ids[idx - 1][best]
+                    last_anns_mask[best] = False
+                    found = 1
+                    break
+            if found == 0:
+                new_ids[x] = to_give
+                to_give += 1
+        ids.append(new_ids)
+        assert len(ids[-1]) == len(cur_anns[0]), "len(ids[-1]) != len(cur_anns[0])"
+    return ids

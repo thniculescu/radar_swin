@@ -60,6 +60,10 @@ class RadarSwinLoss(nn.Module):
         
         #should be 2,3 but only 2-sin is enoug, 180-degree symmetry
         bbox_ori_loss = torch.sum(torch.abs(mask_pred[:, 2] - mask_target[:, 2])) / (sum_mask + 1e-4)
+        bbox_ori_loss += torch.sum(torch.abs(mask_pred[:, 3] - mask_target[:, 3])) / (sum_mask + 1e-4)
+        
+        # bbox_ori_loss = torch.sum(torch.abs(torch.sin(mask_pred[:, 2]) - torch.sin(mask_target[:, 2]))) / (sum_mask + 1e-4)
+        # bbox_ori_loss += torch.sum(torch.abs(torch.cos(mask_pred[:, 3]) - torch.cos(mask_target[:, 3]))) / (sum_mask + 1e-4)
 
         bbox_size_loss = torch.sum(torch.abs(mask_pred[:, 4:6] * mask_pred[:, [1, 1]] - mask_target[:, 4:6] * mask_target[:, [1, 1]])) / (sum_mask + 1e-4)
 
