@@ -131,17 +131,18 @@ def do_plots(config, data_loader_val, model):
     model.eval()
     keep_next = None
 
-    final_preds = None
+    final_preds = {}
 
     for batch_nr, (samples, target, test_case) in enumerate(data_loader_val):
         test_case = [(test_case[0][i], int(test_case[1][i])) for i in range(len(test_case[0]))]
 
-        if final_preds is None:
-            final_preds = {}
+        if batch_nr == 0:
             for x in test_case:
                 #initial empty list for prediction at sweep 0
-                final_preds[x[0]] = {"preds": [np.empty((0, 8))], "input_hmap": [[]]}
-                
+                if config.MODEL.TRACKING is True:
+                    final_preds[x[0]] = {"preds": [np.empty((0, 8))], "input_hmap": [[]]}
+                else:
+                    final_preds[x[0]] = {"preds": [], "input_hmap": []}
 
         if keep_next is not None:
             samples = torch.vstack((keep_next[0], samples))
@@ -162,20 +163,21 @@ def do_plots(config, data_loader_val, model):
             target = target[:-next_sweep_id_count]
             test_case = test_case[:-next_sweep_id_count]
 
-        for idx, scene_sweep in enumerate(test_case):
-            if batch_nr == 0:
-                break
-            hmap_pred = gen_heatmap(final_preds[scene_sweep[0]]['preds'][scene_sweep[1] - 1])
+        if config.MODEL.TRACKING is True:
+            for idx, scene_sweep in enumerate(test_case):
+                if batch_nr == 0:
+                    break
+                hmap_pred = gen_heatmap(final_preds[scene_sweep[0]]['preds'][scene_sweep[1] - 1])
 
-            # if scene_sweep[0] == '0006' and scene_sweep[1] < 11:
-            #     plt.figure(figsize=(12, 3))
-            #     plt.title(f"scene: {scene_sweep[0]}, sweep: {scene_sweep[1] - 1}")
-            #     plt.plot(np.arange(360), hmap_pred, 'g')
-            #     plt.plot(np.arange(360), samples[idx].cpu().numpy()[3, 0, :], 'r--')
-            
-            #make a copy 6 times of hmap_pred
-            hmap_pred = np.stack([hmap_pred for _ in range(6)], axis=0) #6 x 360
-            samples[idx, 3] = torch.tensor(hmap_pred).to(torch.float16) #4th channel = heatmap (before: r, vr, rcs)
+                # if scene_sweep[0] == '0006' and scene_sweep[1] < 11:
+                #     plt.figure(figsize=(12, 3))
+                #     plt.title(f"scene: {scene_sweep[0]}, sweep: {scene_sweep[1] - 1}")
+                #     plt.plot(np.arange(360), hmap_pred, 'g')
+                #     plt.plot(np.arange(360), samples[idx].cpu().numpy()[3, 0, :], 'r--')
+                
+                #make a copy 6 times of hmap_pred
+                hmap_pred = np.stack([hmap_pred for _ in range(6)], axis=0) #6 x 360
+                samples[idx, 3] = torch.tensor(hmap_pred).to(torch.float16) #4th channel = heatmap (before: r, vr, rcs)
             
             
         with torch.amp.autocast('cuda', enabled=config.AMP_ENABLE):
@@ -188,7 +190,11 @@ def do_plots(config, data_loader_val, model):
             #mask x where it's bigger than both neighbours
             peak_preds_mask = np.logical_and(x[:, 0] > np.roll(x[:, 0], 1), x[:, 0] > np.roll(x[:, 0], -1))
             #mask x where x[:, 0] is smaller than 0.25
-            preds_mask = np.ma.masked_where(x[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR + 0.15, x[:, 0])
+            if config.MODEL.TRACKING is True:
+                preds_mask = np.ma.masked_where(x[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR + 0.15, x[:, 0])
+            else:
+                preds_mask = np.ma.masked_where(x[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR, x[:, 0])
+
             preds_mask = np.ma.getmask(preds_mask)
             #intersect the two masks
             preds_mask = np.logical_and(preds_mask, peak_preds_mask)
@@ -213,7 +219,11 @@ def do_plots(config, data_loader_val, model):
 
             # print("x shape: ", x.shape)
             final_preds[test_case[idx][0]]["preds"].append(np.array(x))
-            final_preds[test_case[idx][0]]["input_hmap"].append(samples[idx].cpu().numpy()[3, 0, :])
+
+            if config.MODEL.TRACKING is True:
+                final_preds[test_case[idx][0]]["input_hmap"].append(samples[idx].cpu().numpy()[3, 0, :])
+            else: 
+                final_preds[test_case[idx][0]]["input_hmap"].append(np.ones((360, )))
 
             
         print("batch: ", batch_nr, "len: ", outputs.shape[0])

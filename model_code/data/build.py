@@ -82,7 +82,7 @@ def build_loader(config):
         drop_last=True,
     )
 
-    if config.MODEL.TRACKING and config.ALL_SCENE_PARALLEL:
+    if config.MODEL.TRACKING or config.ALL_SCENE_PARALLEL:
         data_loader_val = torch.utils.data.DataLoader(
             dataset_val, sampler=sampler_val,
             batch_size=170,

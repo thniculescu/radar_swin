@@ -17,6 +17,8 @@ MODEL:
 
   # RESUME: 
   # PRETRAINED: '../checkpoints/alpha_small/all_targets/ckpt_epoch_250.pth'
+  # PRETRAINED: '../model_code/alpha_small/no_static_only_veh_rot_track/ckpt_epoch_250.pth'
+  
   PRETRAINED: '../model_code/alpha_small/all_targets_rot_track/ckpt_epoch_399.pth'
 
 

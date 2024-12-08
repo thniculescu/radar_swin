@@ -101,7 +101,12 @@ def parse_option():
 
     # CONFIG_PATH = './configs/alpha_small/all_targets_rot_tr.yaml'
     # CONFIG_PATH = './configs/alpha_small/only_veh_rot_tr.yaml'
-    CONFIG_PATH = './configs/alpha_small/no_static_only_veh_rot_tr.yaml'
+    # CONFIG_PATH = './configs/alpha_small/no_static_only_veh_rot_tr.yaml'
+
+    # CONFIG_PATH = './configs/alpha_small/all_targets_more.yaml'
+    # CONFIG_PATH = './configs/alpha_small/no_static_only_veh_more.yaml'
+
+    CONFIG_PATH = './configs/alpha_small/all_targets_more_tr.yaml'
 
     parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
     parser.add_argument('--cfg', type=str, required=False, metavar="FILE", help='path to config file', default=CONFIG_PATH)

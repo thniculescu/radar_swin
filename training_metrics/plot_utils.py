@@ -101,7 +101,7 @@ def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=N
         if ann_ids is not None:
             ax.plot(gigi[:, 1], gigi[:, 0], c=colors[hash(ann_ids[x]) % 5], label=line_label)
         else:
-            ax.plot(gigi[:, 1], gigi[:, 0], c=color, label=line_label, alpha = min(1, pred_alpha[x]))
+            ax.plot(gigi[:, 1], gigi[:, 0], c=color, label=line_label, alpha = pred_alpha[x])
 
 
     for x in range(car_range.shape[0]):
@@ -154,9 +154,9 @@ def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True
     
     scene = loaded_data[scene_name]
     
-    if predictions is True:
+    if tracking is True:
         assert ego_track is not None, "ego_track is None"
-        track_ids = gen_tracks(scene['preds'], ego_track)
+        track_ids, _ = gen_tracks(scene['preds'], ego_track)
 
     for sw in sweeps:
         if sw < 0 or sw >= len(scene['radar']):
@@ -178,7 +178,7 @@ def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True
             plot_bboxes(ax, anns, ground_truth=ground_truth, tracking=tracking, vt=vt)
             pass
         if predictions:
-            plot_bboxes(ax, preds, ground_truth=False, tracking=tracking, vt=vt, ann_ids=track_ids[sw])
+            plot_bboxes(ax, preds, ground_truth=False, tracking=tracking, vt=vt, ann_ids=track_ids[sw] if tracking is True else None)
                         
         if ego_track is not None:
             trans, rot = ego_track
@@ -193,11 +193,16 @@ def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True
         if make_video:
             plt.savefig(f'./plots/{scene_name}/' + str(sw) + '.png')
             plt.close()
+        
+        # plt.figure(figsize=(12, 3))
+        # plt.plot(np.arange(360), scene['heatmap'][sw])
+        # plt.show()
     
     if make_video:
         print(f"Time taken: {time.time() - start_time}")
 
 
+#for a single scene
 def anns_to_cart(anns):
     #range, angle, orientation, w, l, vr, vt, hmap
     car_ori = anns[:, 2] + anns[:, 1]
@@ -205,23 +210,40 @@ def anns_to_cart(anns):
     car_range = anns[:, 0]
     car_rot = anns[:, 1]
 
-    car_trans = np.array([np.array([car_range[x] * np.cos(car_rot[x]), car_range[x] * np.sin(car_rot[x])]) for x in range(car_range.shape[0])])
+    car_trans = np.array([np.array(
+        [car_range[x] * np.cos(car_rot[x]), 
+         car_range[x] * np.sin(car_rot[x]), 
+         0]) for x in range(car_range.shape[0])])
 
-    car_ori_matrix = np.array([[[np.cos(car_ori[x]), -np.sin(car_ori[x])], [np.sin(car_ori[x]), np.cos(car_ori[x])]] for x in range(car_ori.shape[0])])
+    # car_trans = np.array(
+    #     [[car_range[x] * np.cos(car_rot[x]), 
+    #      car_range[x] * np.sin(car_rot[x]), 
+    #      0] for x in range(car_range.shape[0])])
 
-    car_rot_matrix = np.array([[[np.cos(car_rot[x]), -np.sin(car_rot[x])], [np.sin(car_rot[x]), np.cos(car_rot[x])]] for x in range(car_rot.shape[0])])
+    car_ori_matrix = np.array([
+        [[np.cos(car_ori[x]), -np.sin(car_ori[x]), 0],
+         [np.sin(car_ori[x]), np.cos(car_ori[x]),  0],
+         [0,                  0,                   1]] for x in range(car_ori.shape[0])])
+
+    car_rot_matrix = np.array([
+        [[np.cos(car_rot[x]), -np.sin(car_rot[x]), 0],
+         [np.sin(car_rot[x]), np.cos(car_rot[x]),  0],
+         [0,                  0,                   1]] for x in range(car_rot.shape[0])])
     
     #car velocity in cartesian coordinates
     car_vr = anns[:, 5] * car_range
     car_vt = anns[:, 6] * car_range
     
     car_v_endp = np.stack([car_vr + car_range, car_vt], axis=1)
-    car_v_endp = np.array([(car_rot_matrix[x] @ car_v_endp[x].T).T for x in range(car_v_endp.shape[0])])
-    car_v_endp -= car_trans
+    car_v_endp = np.array([(car_rot_matrix[x][:2, :2] @ car_v_endp[x].T).T for x in range(car_v_endp.shape[0])])
+    
+    car_v_endp -= car_trans[:, :2]
 
+    # car_v_endp[:, 2] = 0
 
     return car_trans, car_ori_matrix, car_size, car_v_endp
 
+# receives all anns from a whole scene
 def gen_tracks(all_anns, ego_track):
     #anns: [[range, angle, orientation, w, l, vr, vt, hmap], ...]
 
@@ -233,24 +255,25 @@ def gen_tracks(all_anns, ego_track):
     # for x in range(6):
     #     plt.plot(10 * x * np.cos(gigi), 10 * x *  np.sin(gigi), 'k', alpha=0.3)
 
-    global_anns = [(np.empty((0, 2)), np.empty((0, 2, 2)), np.empty((0, 2)), np.empty((0, 2)))]
+    global_anns = [(np.empty((0, 3)), np.empty((0, 3, 3)), np.empty((0, 2)), np.empty((0, 2)))]
     trans, rot = ego_track
 
     for idx, anns in enumerate(all_anns):
         if idx == 0:
             continue
+        
+        if len(anns) == 0:
+            global_anns.append(global_anns[0])
+            continue
+
         cart_trans, cart_ori, cart_wl, cart_v = anns_to_cart(anns)
 
         assert len(cart_trans) == len(cart_ori) == len(cart_wl) == len(cart_v), "not all scene anns lens equal"
 
-        if len(cart_trans) == 0:
-            global_anns.append(global_anns[0])
-            continue
-
-        cart_ori = np.array([rot[idx][:2, :2] @ x for x in cart_ori])
+        cart_ori = np.array([rot[idx] @ x for x in cart_ori])
         cart_v = np.array([rot[idx][:2, :2] @ x for x in cart_v])
-        cart_trans = (rot[idx][:2, :2] @ cart_trans.T).T
-        cart_trans += trans[idx][:2]
+        cart_trans = (rot[idx] @ cart_trans.T).T
+        cart_trans += trans[idx]
 
         #Center
         # plt.scatter(cart_trans[:, 0], cart_trans[:, 1], c='g', label='pred', marker='x')
@@ -275,7 +298,9 @@ def gen_tracks(all_anns, ego_track):
         last_anns_mask = np.ones(len(last_anns[0]), dtype=bool)
         new_ids = np.array([-1] * len(cur_anns[0]))
         for x in desc_conf:
-            diffs = last_anns[0] + last_anns[3] - cur_anns[0][x]
+            diffs = last_anns[0] - cur_anns[0][x]
+            diffs = diffs[:, :2] + 0.5 * last_anns[3] #TODO: get real time diff
+
             diffs = np.hypot(diffs[:, 0], diffs[:, 1])
             ord_best = np.argsort(diffs)
             found = 0
@@ -290,4 +315,4 @@ def gen_tracks(all_anns, ego_track):
                 to_give += 1
         ids.append(new_ids)
         assert len(ids[-1]) == len(cur_anns[0]), "len(ids[-1]) != len(cur_anns[0])"
-    return ids
+    return ids, global_anns
