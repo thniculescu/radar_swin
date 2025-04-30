@@ -13,13 +13,31 @@ import matplotlib.pyplot as plt
 #     config = yaml.load(file, Loader=yaml.FullLoader)
 
 # data_path = config['DATA']['DATA_PATH']
+# data_path = '../preproc_datasets/abs_50m_1r_1l_0v/no_static_only_veh/all_scenes.npy'
 
-data_path = '../preproc_datasets/abs_50m_1r_0l_0v_more/all_targets/all_scenes.npy'
+
+# data_path = '../preproc_datasets/abs_50m_1r_0l_0v_more/all_targets/all_scenes.npy'
+# data_path = '../preproc_datasets/abs_50m_1r_0l_0v_more/no_static_only_veh/all_scenes.npy'
+data_path = '../preproc_datasets/gt_all_anns/all_scenes.npy'
+
+
 print("data_path: ", data_path)
 loaded_data = np.load(data_path, allow_pickle=True).item()
 train_scenes = set(loaded_data.keys())
 
-pred_data = np.load('../model_code/predictions.npy', allow_pickle=True).item()
+# pred_path = 'predictions.npy'
+
+pred_path = 'p_at.npy'
+# pred_path = 'p_nsov.npy'
+# pred_path = 'p_at_tr.npy'
+# pred_path = 'p_nsov_tr.npy'
+
+# pred_path = 'tr_new25_at.npy'
+# pred_path = 'tr_new40_at.npy'
+# pred_path = 'tr_new100_at.npy'
+
+pred_data = np.load('../model_code/' + pred_path, allow_pickle=True).item()
+print(pred_data['0006'].keys())
 #delete from loaded data the scenes that are not in the predictions
 for scene in list(loaded_data.keys()):
     if scene not in pred_data.keys():
@@ -34,16 +52,16 @@ for scene in list(loaded_data.keys()):
 # print("loaded_data[scene_name]['anns'] shape: ", len(loaded_data['0042']['anns']))
 # print("loaded_data[scene_name]['preds'] shape: ", len(loaded_data['0042']['preds']))
 # %%
-for scene_name in list(loaded_data.keys())[20:22]:
-    SCENE_NAME = scene_name
-# SCENE_NAME = list(loaded_data.keys())[3]
-# SCENE_NAME = list(loaded_data.keys())[21]
-# SCENE_NAME = '0008' # 2
-# SCENE_NAME = '0104' # 21
+for scene_name in list(loaded_data.keys())[77:78]:
+    print(scene_name)
+    # continue
+    trans, rot = get_ego_track_cart(loaded_data, scene_name)
 
-    trans, rot = get_ego_track_cart(loaded_data, SCENE_NAME)
+    #DETECTION
+    do_plots(loaded_data, scene_name, list(range(0, 4)), show_vels=False, ground_truth=True, predictions=True, vt=False, tracking=False, show_match_radius=None, ego_track=(trans, rot), make_video=False, add_legend=True)
 
-    do_plots(loaded_data, SCENE_NAME, list(range(0, 5)), show_vels=False, ground_truth=True, predictions=True, vt=True, tracking=True, ego_track=(trans, rot), make_video=False)
+    #TRACKING
+    # do_plots(loaded_data, scene_name, list(range(0, 50)), show_vels=True, ground_truth=True, predictions=False, vt=True, tracking=True, show_match_radius=None, ego_track=(trans, rot), make_video=True, add_legend=True)
 
 # %%
 final_json = {
@@ -67,7 +85,7 @@ for scene_name in list(loaded_data.keys()):
 
         sample_token = loaded_data[scene_name]['sample_token'][nr_sweep]
         
-        for idx_ann in range(len(track_ids[nr_sweep])):
+        for idx_ann in range(len(ann_trans)):
             sample_json = {}
             sample_json['sample_token'] = sample_token
             
@@ -82,8 +100,11 @@ for scene_name in list(loaded_data.keys()):
 
             rot = rot0 @ rot
             vel = (rot0[:2, :2] @ vel.T).T
+
+            #TODO: KEEPING ONLY MOVING PREDICTIONS
             if np.hypot(vel[0], vel[1]) < 0.1:
                 continue
+            
             trans = (rot0 @ trans.T).T
             trans += loaded_data[scene_name]['ego_translation'][0]
             trans[2] = 1
@@ -92,10 +113,16 @@ for scene_name in list(loaded_data.keys()):
             sample_json['rotation'] = Quaternion(matrix=rot).elements.tolist()
             sample_json['size'] = wl.tolist()
             sample_json['velocity'] = vel.tolist()
+
             sample_json['tracking_id'] = track_ids[nr_sweep][idx_ann]
             sample_json['tracking_name'] = 'car'
             sample_json['tracking_score'] = loaded_data[scene_name]['preds'][nr_sweep][idx_ann][7]
             assert loaded_data[scene_name]['preds'][nr_sweep][idx_ann][7] <= 1.0, "wrong heatmap conf"
+
+            sample_json['detection_name'] = 'car'
+            sample_json['detection_score'] = loaded_data[scene_name]['preds'][nr_sweep][idx_ann][7]
+            sample_json['attribute_name'] = 'vehicle.moving'
+            
             sample_results.append(sample_json)
 
         final_json['results'][sample_token] = sample_results
@@ -104,7 +131,7 @@ for scene_name in list(loaded_data.keys()):
 import json
 from numpyencoder import NumpyEncoder
 
-with open('results.json', 'w') as outfile:
+with open('results_' + pred_path[:-3] + 'json', 'w') as outfile:
     json.dump(final_json, outfile,
               indent=4, cls=NumpyEncoder)
 

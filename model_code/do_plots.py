@@ -126,7 +126,6 @@ def gen_heatmap(anns):
 
 def do_plots(config, data_loader_val, model):
     start_time = time.time()
-    gigel = np.empty((0, 8))
     model.cuda()
     model.eval()
     keep_next = None
@@ -191,7 +190,7 @@ def do_plots(config, data_loader_val, model):
             peak_preds_mask = np.logical_and(x[:, 0] > np.roll(x[:, 0], 1), x[:, 0] > np.roll(x[:, 0], -1))
             #mask x where x[:, 0] is smaller than 0.25
             if config.MODEL.TRACKING is True:
-                preds_mask = np.ma.masked_where(x[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR + 0.15, x[:, 0])
+                preds_mask = np.ma.masked_where(x[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR + 0.75, x[:, 0])
             else:
                 preds_mask = np.ma.masked_where(x[:, 0] >= config.CENTERNET.PRED_HEATMAP_THR, x[:, 0])
 
@@ -203,13 +202,14 @@ def do_plots(config, data_loader_val, model):
             x = np.hstack((x, np.linspace(0, 2 * np.pi, config.DATA.INPUT_SIZE[1]).reshape(-1, 1)))
 
 
-            # x[:, 2] = np.arcsin(x[:, 2])
-            x[:, 2] = np.atan2(x[:, 2], x[:, 3]) ###TODO ATAN2 change instead of arcsin
-
+            x[:, 2] = np.atan2(x[:, 2], x[:, 3])
+            
             x = x[preds_mask]
             # hmap, range, orientation [sin, cos], size [w l], velocity [vr vt]
             x = x[:, [1, -1, 2, 4, 5, 6, 7, 0]]
             #range, angle, orientation, size [w l], velocity [vr vt] hmap
+            if not config.MODEL.TRACKING:
+                x[:, 6] = 0
             
             #remove clutter big buses in front
             # for idxx in range(x.shape[0]):
@@ -239,8 +239,8 @@ def do_plots2(config, data_loader_val, model):
     # take a sample from the validation set
     total = 0
     for i, (samples, target, test_case) in enumerate(data_loader_val):
-        if i < 3 or i > 6:
-            continue
+        # if i < 3 or i > 6:
+        #     continue
 
         test_case = [(test_case[0][i], int(test_case[1][i])) for i in range(len(test_case[0]))]
 
@@ -258,7 +258,7 @@ def do_plots2(config, data_loader_val, model):
         # for j in np.random.randint(15, 80, 8):
         # for j in np.random.randint(0, 127, 5):
         # for j in np.random.randint(14, 79, 8):
-        for j in range(0, 5):
+        for j in range(53, 54):
             sweeps = samples[j]
             sweeps = sweeps.cpu().numpy().transpose(1, 2, 0)
 

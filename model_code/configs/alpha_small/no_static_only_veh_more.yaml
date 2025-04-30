@@ -19,7 +19,7 @@ MODEL:
   # PRETRAINED: '../checkpoints/alpha_small/all_targets/ckpt_epoch_250.pth'
   # PRETRAINED: '../model_code/alpha_small/no_static_only_veh_rot_track/ckpt_epoch_250.pth'
   
-  # PRETRAINED: '../model_code/alpha_small/no_static_only_veh_more/ckpt_epoch_399.pth'
+  PRETRAINED: '../model_code/alpha_small/no_static_only_veh_more/ckpt_epoch_385.pth'
 
 
   RADARSWIN:
@@ -70,4 +70,4 @@ FUSED_WINDOW_PROCESS: False
 SAVE_FREQ: 5
 
 EVAL_MODE: True
-ALL_SCENE_PARALLEL: False
+ALL_SCENE_PARALLEL: True

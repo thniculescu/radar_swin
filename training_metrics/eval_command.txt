@@ -1,4 +1,10 @@
 
+#DETECTION
+python ../venv_nusc_eval/lib64/python3.6/site-packages/nuscenes/eval/detection/evaluate.py --config_path ../venv_nusc_eval/lib64/python3.6/site-packages/nuscenes/eval/detection/configs/modif_only_car.json --output_dir . --eval_set "val" --dataroot /tmp/nuscenes-dataset results_p_at.json
+
+#TRACKING
 python ../venv_nusc_eval/lib64/python3.6/site-packages/nuscenes/eval/tracking/evaluate.py --config_path ../venv_nusc_eval/lib64/python3.6/site-packages/nuscenes/eval/tracking/configs/modif_only_car.json --output_dir . --eval_set "val" --dataroot /tmp/nuscenes-dataset results_p_at_tr.json
+
+
 
 

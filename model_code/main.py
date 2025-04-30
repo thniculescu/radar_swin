@@ -104,9 +104,15 @@ def parse_option():
     # CONFIG_PATH = './configs/alpha_small/no_static_only_veh_rot_tr.yaml'
 
     # CONFIG_PATH = './configs/alpha_small/all_targets_more.yaml'
+    # CONFIG_PATH = './configs/alpha_small/only_veh_more.yaml'
     # CONFIG_PATH = './configs/alpha_small/no_static_only_veh_more.yaml'
 
     CONFIG_PATH = './configs/alpha_small/all_targets_more_tr.yaml'
+    # CONFIG_PATH = './configs/alpha_small/no_static_only_veh_more_tr.yaml'
+
+    # CONFIG_PATH = './configs/beta_small/beta_1.yaml'
+    # CONFIG_PATH = './configs/beta_small/beta_2.yaml'
+    # CONFIG_PATH = './configs/beta_small/beta_2_det.yaml'
 
     parser = argparse.ArgumentParser('Swin Transformer training and evaluation script', add_help=False)
     parser.add_argument('--cfg', type=str, required=False, metavar="FILE", help='path to config file', default=CONFIG_PATH)
@@ -134,7 +140,7 @@ def main(config, logger):
     logger.info(f"Creating model:{config.MODEL.TYPE}/{config.MODEL.NAME}")
     model = build_model(config)
 
-    torchinfo.summary(model, input_size=(config.DATA.BATCH_SIZE, config.MODEL.RADARSWIN.IN_CHANS, config.DATA.INPUT_SIZE[0], config.DATA.INPUT_SIZE[1]), depth=4, col_names=["input_size", "output_size", "num_params", "mult_adds"])
+    print(torchinfo.summary(model, input_size=(config.DATA.BATCH_SIZE, config.MODEL.RADARSWIN.IN_CHANS, config.DATA.INPUT_SIZE[0], config.DATA.INPUT_SIZE[1]), depth=3, col_names=["input_size", "output_size", "num_params", "mult_adds"]))
 
     # logger.info(str(model))
 
@@ -195,9 +201,9 @@ def main(config, logger):
             logger.disabled = True
 
         load_pretrained(config, model_without_ddp, logger)
-        # APs, tot_loss = validate(config, data_loader_val, model, logger)
-        # logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
-        # print(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
+        APs, tot_loss = validate(config, data_loader_val, model, logger)
+        logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
+        print(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
 
         logger.disabled = False
 
@@ -221,8 +227,9 @@ def main(config, logger):
             save_checkpoint(config, epoch, model_without_ddp, max_accuracy, optimizer, lr_scheduler, loss_scaler,
                             logger)
 
-        APs, tot_loss = validate(config, data_loader_val, model, logger)
-        logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
+        if epoch % 5 == 0:
+            APs, tot_loss = validate(config, data_loader_val, model, logger)
+            logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {APs}, avg loss: {tot_loss}%")
         # max_accuracy = max(max_accuracy, acc1)
         # logger.info(f'Max accuracy: {max_accuracy:.2f}%')
 
@@ -340,7 +347,9 @@ def validate(config, data_loader, model, logger):
                 # f'detA@2m {detA2_meter.val:.3f} ({detA2_meter.avg:.3f})\t'
                 # f'AP {AP_meter.val:.3f} ({AP_meter.avg:.3f})\t'
                 f'Mem {memory_used:.0f}MB')
-    
+
+
+    print(f'WE DID AP: fp_tp_shape: {thresh_tp_fp_conf.shape}, total_gt: {total_gt}')
     aps = calc_ap(thresh_tp_fp_conf, total_gt, config.METRICS.AP_THR)
     logger.info(f'AP {np.sum(aps) / len(aps):.3f} ({aps})\t')
     # logger.info(f' * Acc@1 {detA2_meter.avg:.3f} Acc@5 {AP_meter.avg:.3f}')
@@ -468,12 +477,12 @@ if __name__ == '__main__':
     # os.environ['LOCAL_RANK'] = '2'
     # os.environ['RANK'] = '0'
     
-    # os.environ['CUDA_VISIBLE_DEVICES'] = '5'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '5'
     # vis_devs = os.environ['CUDA_VISIBLE_DEVICES'].split(',')
     print(torch.cuda.device_count())
     print([torch.cuda.get_device_properties(x) for x in range(torch.cuda.device_count())])
     
-    #vis_devs = [int(x) for x in os.environ['CUDA_VISIBLE_DEVICES'].split(',')]    
+    vis_devs = [int(x) for x in os.environ['CUDA_VISIBLE_DEVICES'].split(',')]    
     world_size = torch.cuda.device_count()
     #print('CUDA_VISIBLE_DEVICES:', vis_devs)
     #print('world_size:', world_size)

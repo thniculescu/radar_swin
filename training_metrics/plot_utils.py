@@ -1,13 +1,22 @@
+from io import BytesIO
+import re
 import time
+from matplotlib.patches import Rectangle
 import numpy as np
 import matplotlib.pyplot as plt
 from pyquaternion import Quaternion
 import os
 
+from matplotlib.transforms import Bbox
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.backends.backend_svg import FigureCanvasSVG
+from IPython.display import SVG
+
 def plot_sweeps(ax, radar_sw, nr_sweeps=6, show_vels=False):
     assert radar_sw.shape[0] >= nr_sweeps, "radar_sw.shape[0] != nr_sweeps"
 
-    colors = ['#00FF00', '#00D815', '#00B13C', '#008A63', '#00638A', '#003CB1', '#0015D8', '#0000FF'][::-1]
+    colors = ['#00FF00', '#00D815', '#00B13C', '#008A63', '#00638A', '#0000FF'][::-1]
+    # colors = ['#00FF00', '#00D815', '#00B13C', '#008A63', '#00638A', '#003CB1', '#0015D8', '#0000FF'][::-1]
     ang_bins = np.linspace(0, 2 * np.pi, radar_sw.shape[1], endpoint=False)
 
     for idx in reversed(range(nr_sweeps)):
@@ -15,7 +24,8 @@ def plot_sweeps(ax, radar_sw, nr_sweeps=6, show_vels=False):
         ax.scatter(ang_bins, 
                     radar_sw[idx][:, 0], 
                     marker='o', s=7, c=colors[idx], 
-                    alpha=1 - 0.9 * idx / nr_sweeps)
+                    alpha=1 - 0.9 * idx / nr_sweeps,
+                    label='t sweep' if idx == 0 else f't - {(idx)} sweep')
 
         if show_vels:
         # velocities
@@ -23,9 +33,10 @@ def plot_sweeps(ax, radar_sw, nr_sweeps=6, show_vels=False):
                     radar_sw[idx][:, 0], 
                     np.zeros_like(ang_bins),
                     radar_sw[idx][:, 1],
-                    angles='xy', scale_units='xy', scale=1/6,
+                    angles='xy', scale_units='xy', scale=1, #nusc scale=1/6
                     color='k', 
-                    alpha=1 - 0.9 * idx / nr_sweeps)
+                    alpha=1 - 0.9 * idx / nr_sweeps,
+                    label='radial velocity')
 
 
 def get_car_corners(car_size, car_range, car_ori, car_rot):
@@ -57,12 +68,12 @@ def get_car_corners(car_size, car_range, car_ori, car_rot):
     car_trans_final = car_trans_final.reshape(-1, 4, 2)
     return car_trans_final
 
-def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=None):
+def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=None, show_match_radius=None):
     if ground_truth is True:
         color = 'r'
         line_label = 'target'
     else:
-        color = 'g'
+        color = 'k'
         line_label = 'prediction'
 
     # ground truth: ANN_FEATURE_SIZE = 17
@@ -79,6 +90,21 @@ def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=N
     # num_radar_pts
     # num_lidar_pts
 
+    #pred merge
+    #  if ground_truth is False:
+    #     #for every continous zone with adjacent angles:
+    #     #take the mean of the range and angle
+    #     new_anns = np.zeros((0, anns.shape[1]))
+
+    #     cx, cy = anns[:, 0] * np.cos(anns[:, 1]), anns[:, 0] * np.sin(anns[:, 1])
+    #     while anns.shape[0] > 0:
+    #         mask = np.abs(cx - cx[0], cy - cy[0]) < 2
+    #         new_anns = np.vstack((new_anns, np.mean(anns[mask], axis=0)))
+    #         anns = anns[~mask]
+    #         cx, cy = cx[~mask], cy[~mask]
+    
+    #     anns = new_anns
+    
     anns = np.array(anns, dtype=np.float32)
 
     car_ori = anns[:, 2] + anns[:, 1]
@@ -89,8 +115,17 @@ def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=N
     if ground_truth is False:
         # pred_alpha = np.ones((anns.shape[0]))
         pred_alpha = anns[:, -1]
+        # ax.scatter(car_rot, car_range, marker='x', color='k', s=15)
     else:
         pred_alpha = np.ones((anns.shape[0]))
+        if show_match_radius is not None:
+            #plot circles of radius 4 around each radar point
+            for x in range(anns.shape[0]):
+                circle = plt.Circle(
+                    (car_range[x] * np.cos(car_rot[x]), 
+                    car_range[x] * np.sin(car_rot[x])),
+                    show_match_radius, color='k', alpha=0.1, transform=ax.transData._b)
+                ax.add_artist(circle)
 
     car_corners = get_car_corners(car_size, car_range, car_ori, car_rot)
 
@@ -98,10 +133,23 @@ def plot_bboxes(ax, anns, ground_truth=True, vt=False, tracking=False, ann_ids=N
         gigi = car_corners[x]
         gigi = np.vstack((gigi, gigi[0]))
         colors = ['g', 'b', 'y', 'c', 'k']
-        if ann_ids is not None:
-            ax.plot(gigi[:, 1], gigi[:, 0], c=colors[hash(ann_ids[x]) % 5], label=line_label)
+        if ground_truth is True:
+            has_radar_point = anns[x, 14] >= 1
+            ax.plot(gigi[:, 1],
+                    gigi[:, 0], 
+                    c=color, 
+                    label='target' if has_radar_point else 'no radar reading target',
+                    # label=line_label,
+                    alpha=(1 if has_radar_point else 0.3)) #colored if has a radar point
         else:
-            ax.plot(gigi[:, 1], gigi[:, 0], c=color, label=line_label, alpha = pred_alpha[x])
+            if ann_ids is not None:
+                ax.plot(gigi[:, 1], gigi[:, 0], c=colors[hash(ann_ids[x]) % 5],
+                        label=line_label, alpha=1)
+                # ax.plot(gigi[:, 1], gigi[:, 0], c=colors[hash(ann_ids[x]) % 5],
+                #         label=line_label, alpha=pred_alpha[x])
+            else:
+                ax.plot(gigi[:, 1], gigi[:, 0], c=color,
+                        label=line_label, alpha=pred_alpha[x])
 
 
     for x in range(car_range.shape[0]):
@@ -144,7 +192,7 @@ def get_ego_track_cart(loaded_data, scene_name):
     return trans, rot
 
 
-def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True, predictions=False, vt=False, tracking=False, ego_track=None, make_video=False):
+def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True, predictions=False, vt=False, tracking=False, ego_track=None, show_match_radius=None, add_legend=False, make_video=False):
     print("scene_name: ", scene_name)
     start_time = time.time()
 
@@ -171,14 +219,15 @@ def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True
         fig, ax = plt.subplots(subplot_kw={'projection': 'polar'}, figsize=(12, 12))
         ax.set_ylim(0, 50)
         ax.set_title(f"scene: {scene_name}, sweep: {sw}, time: {scene['timestamp'][sw]}")
+        
         # ax.set_title(f"scene: {scene_name}, sweep: {sw}")
         plot_sweeps(ax, radar_sw, show_vels=show_vels)
         if ground_truth:
             # plot_bboxes(ax, anns, ground_truth=ground_truth, tracking=tracking, ann_ids=scene['anns_tokens'][sw])
-            plot_bboxes(ax, anns, ground_truth=ground_truth, tracking=tracking, vt=vt)
+            plot_bboxes(ax, anns, ground_truth=ground_truth, tracking=tracking, vt=vt, show_match_radius=show_match_radius)
             pass
         if predictions:
-            plot_bboxes(ax, preds, ground_truth=False, tracking=tracking, vt=vt, ann_ids=track_ids[sw] if tracking is True else None)
+            plot_bboxes(ax, preds, ground_truth=False, tracking=tracking, vt=vt, ann_ids=track_ids[sw] if tracking is True else None, show_match_radius=show_match_radius)
                         
         if ego_track is not None:
             trans, rot = ego_track
@@ -189,13 +238,30 @@ def do_plots(loaded_data, scene_name, sweeps, show_vels=False, ground_truth=True
             # print(trans)
             # print(np.atan2(trans[:, 1], trans[:, 0]), np.hypot(trans[:, 1], trans[:, 0]))
             ax.plot(np.atan2(trans[:, 1], trans[:, 0]), np.hypot(trans[:, 0], trans[:, 1]), marker='>', c='k', label='ego track', lw=0.2, markersize=2)
+        
+        #reduce double labels
+        if add_legend:
+            handles, labels = plt.gca().get_legend_handles_labels()
+            by_label = dict(zip(labels, handles))
+            #sort labels alphabetically:
+            labels = np.array(list(by_label.values()))
+            handles = np.array(list(by_label.keys()))
+            ord_labels = np.argsort([re.sub(r'[^a-zA-Z]', '', x) for x in handles])
+            # plt.legend(labels[ord_labels], handles[ord_labels], loc='center left', fontsize='medium', ncols = 2)
+            plt.legend(labels[ord_labels], handles[ord_labels], loc='upper right', bbox_to_anchor=(1, 1), fontsize='medium', ncols = 2)
+
 
         if make_video:
-            plt.savefig(f'./plots/{scene_name}/' + str(sw) + '.png')
-            plt.close()
-        
+            plt.savefig(f'./plots/{scene_name}/' + str(sw) + '.png', bbox_inches='tight')
+            plt.savefig(f'./plots/{scene_name}/' + str(sw) + '.svg', bbox_inches='tight')
+        else:
+            plt.show()
+        plt.close()
+
+        #GT HEATMAP
         # plt.figure(figsize=(12, 3))
-        # plt.plot(np.arange(360), scene['heatmap'][sw])
+        # plt.plot(np.arange(360), scene['heatmap'][sw], label='ground truth heatmap', c='r')
+        # plt.xlabel('angle')
         # plt.show()
     
     if make_video:

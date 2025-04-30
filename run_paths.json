@@ -1,5 +1,5 @@
 {
-    "nusc-mini": "/export/home/acs/stud/t/tudor.niculescu0610/work/radar_swin/datasets/mini",
-    "nusc-trainvali2": "/export/home/acs/stud/t/tudor.niculescu0610/work/radar_swin/datasets/trainval",
-    "nusc-trainval": "/tmp/nuscenes-dataset"
+    "nusc-mini": "/export/home/acs/stud/t/tudor.niculescu0610/work/datasets/mini",
+    "nusc-trainval": "/export/home/acs/stud/t/tudor.niculescu0610/work/datasets/trainval",
+    "tmp": "/tmp/nuscenes-dataset"
 }

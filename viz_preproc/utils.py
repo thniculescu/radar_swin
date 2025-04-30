@@ -226,7 +226,9 @@ def split_ang_bins(points, nr_ang_bins=360): # points = [range, angle, speed, rc
 
 
     #round down the angle
-    points[:, 1] = np.floor(points[:, 1])
+    # points[:, 1] = np.floor(points[:, 1])
+    points[:, 1] = np.round(points[:, 1])
+
     #sort by range
     points = points[np.argsort(points[:, 0])]
     #unique by angle, keep first
@@ -236,6 +238,8 @@ def split_ang_bins(points, nr_ang_bins=360): # points = [range, angle, speed, rc
     # binned_sweep = np.zeros((nr_ang_bins, 3))
     binned_sweep = np.full((nr_ang_bins, 3), 0, dtype=np.float32)
     for p in points:
+        if p[1] == 360:
+            p[1] = 0
         binned_sweep[int(p[1]), 0] = p[0]
         binned_sweep[int(p[1]), 1] = p[2]
         binned_sweep[int(p[1]), 2] = p[3]
@@ -303,8 +307,8 @@ def filter_boxes(nusc, anns, max_range=60, vis_level=0, min_radar_pts=1, min_lid
     return filtered_anns
 
 
-def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, box_corners, t0, nr_sweeps, max_range=60, make_movie=False, scene_name=None):
-    fig, ax = plt.subplots(subplot_kw={'polar': 'True'}, figsize=(8, 8))
+def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, box_corners, t0, nr_sweeps, max_range=60, make_movie=False, scene_name=None, plot_vels=False, plot_unbin=False):
+    fig, ax = plt.subplots(subplot_kw={'polar': 'True'}, figsize=(12, 12))
     #set maxrange 60
     ax.set_title('Sample: ' + str(nr_samps + 1) + ' Time: ' + str((cur_sample['timestamp'] - t0) / 1e6))
     ax.set_ylim(0, max_range)
@@ -317,26 +321,30 @@ def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, 
         # angles = np.radians(np.arange(0, sweep_frame.shape[1], 1))
         angles = np.linspace(0, 2 * np.pi, sweep_frame.shape[1], endpoint=False)
 
+        #velocities
+        if plot_vels:
+            ax.quiver(angles, 
+                    sweep_frame[idx][:, 0], 
+                    np.zeros_like(angles),
+                    sweep_frame[idx][:, 1],
+                    angles='xy', scale_units='xy', scale=1,
+                    color='k', 
+                    alpha=1 - 0.9 * idx / nr_sweeps)
+            
+        # not binned points
+        if plot_unbin:
+            ax.scatter(np.radians(sweep_points[idx][:, 1]), sweep_points[idx][:, 0], s=11, c='y', label='unbinned', marker='x')
+
         #points
         ax.scatter(angles, 
                    sweep_frame[idx][:, 0], 
-                   marker='o', s=7, c=colors[idx], 
-                   alpha=1 - 0.9 * idx / nr_sweeps)
-
-        #velocities
-        # ax.quiver(angles, 
-        #           sweep_frame[idx][:, 0], 
-        #           np.zeros_like(angles),
-        #           sweep_frame[idx][:, 1],
-        #           angles='xy', scale_units='xy', scale=1/6,
-        #           color='k', 
-        #           alpha=1 - 0.9 * idx / nr_sweeps)
-        
-        #not binned points
-        # ax.scatter(np.radians(sweep_points[idx][:, 1]), sweep_points[idx][:, 0], s=1, c='r')
+                   marker='o', s=7, c='b', 
+                   alpha=1, label='binned')
+                #    marker='o', s=7, c=colors[idx], 
+                #    alpha=1 - 0.9 * idx / nr_sweeps, label='binned')
 
     
-    ax.scatter(sweep_anns[:, 1], sweep_anns[:, 0], s=25, c='r', marker='x')
+    # ax.scatter(sweep_anns[:, 1], sweep_anns[:, 0], s=25, c='r', marker='x')
         
     for idx in range(sweep_anns.shape[0]):
         cor = box_corners[idx]
@@ -372,6 +380,11 @@ def plot_proc_data(nr_samps, cur_sample, sweep_points, sweep_frame, sweep_anns, 
         ranges = [r, np.hypot(r, sweep_anns[idx, 6] * r)]
         angles = [th_ang, th_ang + np.arcsin(sweep_anns[idx, 6] * r / ranges[1])]
         ax.plot(angles, ranges, 'g')
+        #remove duplicates from legend
+        handles, labels = plt.gca().get_legend_handles_labels()
+        by_label = dict(zip(labels, handles))
+        ax.legend(by_label.values(), by_label.keys())
+
         
     
     if make_movie:

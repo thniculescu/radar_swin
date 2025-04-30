@@ -13,7 +13,8 @@ def extract_gt_anns(target):
                 r = gigi[j, 1]
                 th = j
                 #anns append: x, y cartesian from polar r th, sample_num = i:
-                anns_i.append((r * np.cos(th * np.pi / 180), r * np.sin(th * np.pi / 180), i))
+                anns_i.append((r * np.cos(np.deg2rad(th)), r * np.sin(np.deg2rad(th)), i))
+                # anns_i.append((r * np.cos(th * np.pi / 180), r * np.sin(th * np.pi / 180), i))
         list_anns.append(anns_i)
     return list_anns
 
@@ -152,6 +153,10 @@ def calc_ap(thresh_tp_fp_conf, num_gt, ap_dist_thresh, min_precision=0.1, min_re
         rec = tp / float(num_gt)
 
         rec_interp = np.linspace(0, 1, 101)  # 101 steps, from 0% to 100% recall.
+        if tp_fp_conf.shape[1] == 0:
+            aps.append(0)
+            continue
+        
         prec = np.interp(rec_interp, rec, prec, right=0)
         conf = np.interp(rec_interp, rec, tp_fp_conf[2, :], right=0)
         rec = rec_interp

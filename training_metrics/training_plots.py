@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
+#### OLD ##########################################################
+
 # LOG_PATH = '../checkpoints/detec/alpha_small/no_static_only_veh/log_rank0.txt'
 # LOG_PATH = '../checkpoints/detec/alpha_small/only_veh/log_rank0.txt'
 # LOG_PATH = '../checkpoints/detec/alpha_small/all_targets/log_rank0.txt'
@@ -11,14 +13,29 @@ import os
 # LOG_PATH = '../checkpoints/track/alpha_small/only_veh/log_rank0.txt'
 # LOG_PATH = '../checkpoints/track/alpha_small/all_targets/log_rank0.txt'
 
-# LOG_PATH = '../model_code/alpha_small/all_targets_rot_track/log_rank0.txt'
-# LOG_PATH = '../model_code/alpha_small/only_veh_rot_track/log_rank0.txt'
 # LOG_PATH = '../model_code/alpha_small/no_static_only_veh_rot_track/log_rank0.txt'
+# LOG_PATH = '../model_code/alpha_small/only_veh_rot_track/log_rank0.txt'
+# LOG_PATH = '../model_code/alpha_small/all_targets_rot_track/log_rank0.txt'
 
+#### BEST##########################################################
+
+# LOG_PATH = '../model_code/alpha_small/no_static_only_veh_more/log_rank0.txt'
 # LOG_PATH = '../model_code/alpha_small/all_targets_more/log_rank0.txt'
-LOG_PATH = '../model_code/alpha_small/no_static_only_veh_more/log_rank0.txt'
 
-# LOG_PATH = '../model_code/alpha_small/all_targets_more_track/log_rank0.txt'
+# LOG_PATH = '../model_code/alpha_small/no_static_only_veh_more_track/log_rank0.txt'
+LOG_PATH = '../model_code/alpha_small/all_targets_more_track/log_rank0.txt'
+
+#### TEST 30 ######################################################
+
+# LOG_PATH = '../model_code/beta_small/beta_2_det/log_rank0.txt'
+# LOG_PATH = '../model_code/beta_small/beta_2_det_2/log_rank0.txt'
+
+# LOG_PATH = '../model_code/beta_small/all_targets_more_track/log_rank0.txt'
+# LOG_PATH = '../model_code/beta_small/beta_2/log_rank0.txt'
+# LOG_PATH = '../model_code/beta_small/beta_2_tr_2/log_rank0.txt'
+
+if not os.path.exists(LOG_PATH):
+    os.chdir('./model_code')
 
 
 with open(LOG_PATH, 'r') as f:
@@ -35,19 +52,23 @@ with open(LOG_PATH, 'r') as f:
             val_loss.append(float(line.split('Loss ')[1].split()[1][1:-1]))
 
     #replace every 3 consecutive val_loss with their average:
-    val_loss = [np.mean(val_loss[i:i+6]) for i in range(0, len(val_loss), 6)]
-    # val_loss = [val_loss[i+1] for i in range(0, len(val_loss), 3)]
+    val_loss = [np.mean(val_loss[i:i+4]) for i in range(0, len(val_loss), 4)]
+    val_loss = [val_loss[i+1] for i in range(0, (len(val_loss) // 3) * 3, 3)]
 
     plt.plot(np.arange(len(train_loss)) / 21, train_loss, label='train')
-    plt.plot(np.arange(len(val_loss)) * len(train_loss) / len(val_loss) / 21, val_loss, label='val')
+    plt.plot(np.linspace(0, len(train_loss) / 21, len(val_loss)), val_loss, label='val')
+    # plt.plot(np.arange(len(val_loss)) * len(train_loss) / len(val_loss) / 21, val_loss, label='val')
     # print(len(train_loss))
     # print(len(val_loss))
     # plt.xlim(0, 455)
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.ylim(1, 3)
+    plt.xlim(0, 400)
+    plt.ylim(0.6, 2)
     plt.grid()
+    plt.savefig(f'./plots_loss_ap/{LOG_PATH.split("/")[3]}_loss.svg', bbox_inches='tight')
+
 
 with open(LOG_PATH, 'r') as f:
     lines = f.readlines()
@@ -74,12 +95,13 @@ with open(LOG_PATH, 'r') as f:
     plt.xlabel('Epoch')
     plt.ylabel('AP (average precision)')
     plt.grid()
-    plt.ylim(0, 0.5)
-    # plt.xlim(0, 455)
+    plt.ylim(0, 0.7)
+    plt.xlim(0, 400)
     for ap_thr in ap_thrs:
         plt.plot(x_axis, aps[str(ap_thr)], label=f'AP {ap_thr}m', linestyle='--')
 
     plt.legend()
+    plt.savefig(f'./plots_loss_ap/{LOG_PATH.split("/")[3]}_ap.svg', bbox_inches='tight')
     plt.show()
 
     start_time = lines[5].split()[1]

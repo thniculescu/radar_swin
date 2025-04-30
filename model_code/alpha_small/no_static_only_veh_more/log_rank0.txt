@@ -12252,3 +12252,28 @@
 [2024-12-01 13:45:58 alpha_small] (main.py 225): INFO Accuracy of the network on the 6834 test images: [0.08993512 0.34140395 0.50583081 0.59476299], avg loss: 1.4866410708406497%
 [2024-12-01 13:46:00 alpha_small] (main.py 283): INFO Train: [390/400][0/213]	eta 0:04:40 lr 0.000162	 wd 0.0100	time 1.3192 (1.3192)	loss 1.0430 (1.0430)	grad_norm 3.9232 (3.9232)	loss_scale 8192.0000 (8192.0000)	mem 12333MB
 [2024-12-01 13:46:03 alpha_small] (main.py 283): INFO Train: [390/400][10/213]	eta 0:01:26 lr 0.000162	 wd 0.0100	time 0.3345 (0.4239)	loss 1.1426 (1.0945)	grad_norm 8.7707 (6.4400)	loss_scale 8192.0000 (8192.0000)	mem 12333MB
+[2024-12-02 04:26:00 alpha_small] (<ipython-input-1-846a4a9dd129> 440): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-02 04:26:00 alpha_small] (<ipython-input-1-846a4a9dd129> 445): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-02 04:26:13 alpha_small] (<ipython-input-1-846a4a9dd129> 130): INFO Creating model:radarswin/alpha_small
+[2024-12-02 04:26:19 alpha_small] (<ipython-input-1-846a4a9dd129> 138): INFO number of params, M: 0.291476
+[2024-12-02 04:26:19 alpha_small] (<ipython-input-1-846a4a9dd129> 141): INFO number of GFLOPs: 0.47831472754478455
+[2024-12-14 13:37:49 alpha_small] (<ipython-input-1-c6a593e40b7f> 447): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-14 13:37:49 alpha_small] (<ipython-input-1-c6a593e40b7f> 452): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-14 13:38:01 alpha_small] (<ipython-input-1-c6a593e40b7f> 134): INFO Creating model:radarswin/alpha_small
+[2024-12-14 13:38:02 alpha_small] (<ipython-input-1-c6a593e40b7f> 142): INFO number of params, M: 0.291476
+[2024-12-14 13:38:02 alpha_small] (<ipython-input-1-c6a593e40b7f> 145): INFO number of GFLOPs: 0.47831472754478455
+[2024-12-14 14:16:48 alpha_small] (<ipython-input-1-c6666f97aa27> 447): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-14 14:16:48 alpha_small] (<ipython-input-1-c6666f97aa27> 452): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-14 14:16:52 alpha_small] (<ipython-input-1-c6666f97aa27> 134): INFO Creating model:radarswin/alpha_small
+[2024-12-14 14:16:53 alpha_small] (<ipython-input-1-c6666f97aa27> 142): INFO number of params, M: 0.291476
+[2024-12-14 14:16:53 alpha_small] (<ipython-input-1-c6666f97aa27> 145): INFO number of GFLOPs: 0.47831472754478455
+[2024-12-14 14:40:27 alpha_small] (2324815692.py 447): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-14 14:40:27 alpha_small] (2324815692.py 452): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-14 14:40:38 alpha_small] (2324815692.py 134): INFO Creating model:radarswin/alpha_small
+[2024-12-14 14:40:40 alpha_small] (2324815692.py 142): INFO number of params, M: 0.291476
+[2024-12-14 14:40:40 alpha_small] (2324815692.py 145): INFO number of GFLOPs: 0.47831472754478455
+[2024-12-14 14:44:42 alpha_small] (<ipython-input-1-c6666f97aa27> 447): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-14 14:44:42 alpha_small] (<ipython-input-1-c6666f97aa27> 452): INFO Full config saved to alpha_small/no_static_only_veh_more/config.json
+[2024-12-14 14:44:47 alpha_small] (<ipython-input-1-c6666f97aa27> 134): INFO Creating model:radarswin/alpha_small
+[2024-12-14 14:44:48 alpha_small] (<ipython-input-1-c6666f97aa27> 142): INFO number of params, M: 0.291476
+[2024-12-14 14:44:48 alpha_small] (<ipython-input-1-c6666f97aa27> 145): INFO number of GFLOPs: 0.47831472754478455

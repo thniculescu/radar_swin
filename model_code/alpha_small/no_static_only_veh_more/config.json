@@ -1,4 +1,4 @@
-ALL_SCENE_PARALLEL: false
+ALL_SCENE_PARALLEL: true
 AMP_ENABLE: true
 AMP_OPT_LEVEL: ''
 AUG:
@@ -44,7 +44,7 @@ MODEL:
   DROP_RATE: 0.0
   NAME: alpha_small
   NUM_CLASSES: 1
-  PRETRAINED: ''
+  PRETRAINED: ../model_code/alpha_small/no_static_only_veh_more/ckpt_epoch_385.pth
   RADARSWIN:
     APE: false
     BBOX_LOSS_WEIGHT: 1.0

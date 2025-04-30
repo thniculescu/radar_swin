@@ -1,5 +1,6 @@
 DATA:
   DATASET: 'nuscenes'
+  # DATA_PATH: '../preproc_datasets/abs_50m_1r_1l_0v/all_targets/all_scenes.npy'
   DATA_PATH: '../preproc_datasets/abs_50m_1r_0l_0v_more/all_targets/all_scenes.npy'
   INPUT_SIZE: (6, 360)
   BATCH_SIZE: 128
