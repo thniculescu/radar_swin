@@ -3,6 +3,8 @@
 This project explores a **Shifted-Window Transformer modification for CenterNet/CenterTrack-type Object Detection and Tracking** from **FMCW radar point-clouds** for autonomous driving.  
 The model is trained and tested on the **nuScenes dataset**.
 
+📄 Full Thesis: [360° Perception with a Network of Radars (PDF)](https://github.com/thniculescu/radar_swin/blob/main/MasterThesis_360degreeperception_with_a_network_of_radars.pdf)
+
 ## References
 
 - Swin Transformer: Hierarchical Vision Transformer using Shifted Windows  
